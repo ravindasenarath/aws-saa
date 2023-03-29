@@ -67,3 +67,62 @@
 
  - IAM Credentials report( account level ) : List all users and their credential status
  - IAM Access Advisor ( User level ) : Permissions granted to user user and when they are last used
+
+## EC2 Fundermentals
+
+ - Elastic Compute Cloud
+ - Mainly consist in the capability of
+  - Renting virtual machines ( EC2 )
+  - Store data in virtual devices ( EBS )
+  - Distribute load across machines ( ELB )
+  - Scaling service ( ASG )
+
+### EC2 sizing and configuration options
+
+ - OS ( Linux, Windows, Mac OS )
+ - CPU
+ - RAM
+ - Storage
+  - Netowork attached ( EBS, EFS )
+  - Hardware ( EC2 Instance store )
+ - Network card
+ - Firewall rules
+ - Bootstrap script
+
+### EC2 User data
+ - Launching commands when machine starts
+ - Only run once at the instance first start
+ - Used to automate boot tasks
+  - Install updates
+  - Install software
+  - Download common files
+  - User data script run with root user
+
+### EC2 Instance types
+ - General purpose
+  - Great for diversity of workloads
+  - Balance between Compute, Memory and Networking
+ - Compute Optimized
+  - For compute intensive tasks that need high performance computing
+ - Memory Optimized
+  - Fast performance for processing large amount of data
+ - Accelerated computing
+ - Storage Optimized
+  - Storage intensive tasks
+
+### Security groups
+
+ - Fundermental network security of AWS
+ - Control how traffic is allowed into EC2
+ - Only contain **allow** rules
+ - Rules can be reference by ip or by security group
+
+### Security groups good to know
+
+ - Can attach to multiple instances
+ - Locks down to region/VPC combination
+ - Live outside of EC2
+ - Good to maintain seperate security group for SSH
+ - If application is not accessible(timesout) most probably SG issue
+ - All inbound traffic is blocked by default
+ - All outbound traffic is allowed by default
