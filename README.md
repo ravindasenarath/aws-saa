@@ -126,3 +126,42 @@
  - If application is not accessible(timesout) most probably SG issue
  - All inbound traffic is blocked by default
  - All outbound traffic is allowed by default
+
+## EC2 Solutions Architect Level
+
+### Elastic IPs
+
+ - When EC2 is Stop/Start public ip will be changed
+ - Elastic IP is a fix ip
+ - Only 5 Elastic Ips per account
+ - Try to avoid
+
+### Placement groups
+ - To have control over how EC2 placed on AWS infrastructure
+ - Strategies
+  - Cluster : law latency group in a single AZ **High performance**
+  - Spread  : Spread across underlying hardware ( max 7 per AZ ) **High Available**
+  - Partition : INstances spread across partitions within AZ **Hadoop/Cassendra/Kafka**
+
+### Elastic Network Interfaces ( ENI )
+
+ - Logical component in a VPC
+ - Virtual Network Card
+ - Can create on the fly and attach
+ - Bound to AZ
+
+### EC2 Hibernate
+
+ - When EC2 
+  - Stop : Data on EBS is kept
+  - Terminate : EBS volues ( root ) is destroyed
+
+ - On EC2 Start
+  - OS Boot , User scripts run
+  - Application starts, caches get warmed
+
+ - Hibernate
+  - RAM is preserved
+  - Instance boots faster
+  - RAM is written to the EBS
+  - EBS should be encrypted
