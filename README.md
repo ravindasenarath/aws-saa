@@ -165,3 +165,70 @@
   - Instance boots faster
   - RAM is written to the EBS
   - EBS should be encrypted
+  
+  ## EC2 Instance Storage
+  
+  ### What is an EBS volume
+  
+  - Elastic Block Storage is a network dirve that can be attached to instances while they running
+  - Persist instance data even after termination
+  - Bound to AZ
+  - Analogy : Netowrk USB stick
+  - By default when instance terminate only root EBS get deleted
+   
+ ### EBS Snapshots
+ 
+  - Backups of EBS
+  - Use to transfer EBS to another AZ
+  - EBS snapshot archive: 75% cheap, take 24-72h to restore
+  - Recycle bin of EBS: Can recover accidental delted EBS
+  - Fast snapshot restore: Cost $$$
+  
+### AMI ( Amazon Machine Image )
+
+ - Customizations of an EC2 instance
+  - Software, configurations, OS, monitoring
+  - Faster boot time
+ - Build for a specific region ( can be copied to other regions )
+ - Can launch AMI from 
+  - Public AMI
+  - Private AMI
+  - Marketplace
+  
+### EC2 Instance Store
+
+ - When need high performance hardware disk
+ - If instance is stopped loose data
+ - Eg buffer, cache
+ 
+### EBS Volume Types
+
+ - GP2/GP3 : General purpose SSD
+ - io1/io2 : High performance SSD
+ - st1 : Low cost HDD for throughput intensive work
+ - sc1 : Lowest cost HDD for infrequently access data
+ 
+### EBS Multi attach
+
+ - Attach same EBS intance to multiple EC2 instances in same AZ
+ - Only io2 family
+ - Higher application availablity
+ - Upto 16 EC2 instances at a time
+ 
+### Amazon EFS ( Elastic File System )
+
+ - Network file system
+ - Multi AZ
+ - Highly available, scalable, Expensive
+ - Compatible with linux based AMI
+ - Scalable, pay as use
+ - Storage classes
+  - Scale mode
+  - Performance mode
+  - Throughput mode
+ - Storage tiers
+  - Standard
+  - EFS/IA ( Infrequently access )
+ - Availability & Durability
+  - Standard : Multi AZ ( Great for prod )
+  - One Zone : One AZ ( Great for dev )
