@@ -1,6 +1,14 @@
 # aws-saa
 
-## IAM & AWS CLI
+## Legend
+
+- [IAM & AWS CLI](#iam-and-aws-cli)
+- [IAM MFA](#iam-mfa)
+- [EC2 Fundermentals](#ec2-fundermentals)
+- [EC2 Solutions Architect Level](#ec2-solutions-architect-level)
+- [EC2 Instance Storage](#ec2-instance-storage)
+
+## IAM And AWS CLI
 
  - Identity and Access Management
  - Global service
@@ -166,9 +174,9 @@
   - RAM is written to the EBS
   - EBS should be encrypted
   
-  ## EC2 Instance Storage
+## EC2 Instance Storage
   
-  ### What is an EBS volume
+### What is an EBS volume
   
   - Elastic Block Storage is a network dirve that can be attached to instances while they running
   - Persist instance data even after termination
@@ -176,7 +184,7 @@
   - Analogy : Netowrk USB stick
   - By default when instance terminate only root EBS get deleted
    
- ### EBS Snapshots
+### EBS Snapshots
  
   - Backups of EBS
   - Use to transfer EBS to another AZ
