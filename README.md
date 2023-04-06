@@ -37,12 +37,12 @@
  - Version
  - Id - Identifier for the policy ( Optional )
  - Statements
-  - Sid - Identifier for the statement ( Optional )
-  - Effect - If statement allows or denies access ( Allow / Deny )
-  - Principle - Account/user/role to which this policy applied to
-  - Action - List of api calls allowed or denied
-  - Resource - List of resources to which actions applied to
-  - Condition - Conditions for policy to be in effect ( Optional )
+   - Sid - Identifier for the statement ( Optional )
+   - Effect - If statement allows or denies access ( Allow / Deny )
+   - Principle - Account/user/role to which this policy applied to
+   - Action - List of api calls allowed or denied
+   - Resource - List of resources to which actions applied to
+   - Condition - Conditions for policy to be in effect ( Optional )
   
 ## IAM MFA
 
@@ -50,11 +50,11 @@
 
  - Strong passwords
  - Password policy
-  - Minimum length
-  - Character types
-  - Allow users to change password
-  - Password expiration
-  - Prevent password reuse
+   - Minimum length
+   - Character types
+   - Allow users to change password
+   - Password expiration
+   - Prevent password reuse
   
 ### Multi Factor Authentication ( MFA )
 
@@ -80,10 +80,10 @@
 
  - Elastic Compute Cloud
  - Mainly consist in the capability of
-  - Renting virtual machines ( EC2 )
-  - Store data in virtual devices ( EBS )
-  - Distribute load across machines ( ELB )
-  - Scaling service ( ASG )
+   - Renting virtual machines ( EC2 )
+   - Store data in virtual devices ( EBS )
+   - Distribute load across machines ( ELB )
+   - Scaling service ( ASG )
 
 ### EC2 sizing and configuration options
 
@@ -91,8 +91,8 @@
  - CPU
  - RAM
  - Storage
-  - Netowork attached ( EBS, EFS )
-  - Hardware ( EC2 Instance store )
+   - Netowork attached ( EBS, EFS )
+   - Hardware ( EC2 Instance store )
  - Network card
  - Firewall rules
  - Bootstrap script
@@ -101,22 +101,22 @@
  - Launching commands when machine starts
  - Only run once at the instance first start
  - Used to automate boot tasks
-  - Install updates
-  - Install software
-  - Download common files
-  - User data script run with root user
+   - Install updates
+   - Install software
+   - Download common files
+   - User data script run with root user
 
 ### EC2 Instance types
  - General purpose
-  - Great for diversity of workloads
-  - Balance between Compute, Memory and Networking
+   - Great for diversity of workloads
+   - Balance between Compute, Memory and Networking
  - Compute Optimized
-  - For compute intensive tasks that need high performance computing
+   - For compute intensive tasks that need high performance computing
  - Memory Optimized
-  - Fast performance for processing large amount of data
+   - Fast performance for processing large amount of data
  - Accelerated computing
  - Storage Optimized
-  - Storage intensive tasks
+   - Storage intensive tasks
 
 ### Security groups
 
@@ -147,9 +147,9 @@
 ### Placement groups
  - To have control over how EC2 placed on AWS infrastructure
  - Strategies
-  - Cluster : law latency group in a single AZ **High performance**
-  - Spread  : Spread across underlying hardware ( max 7 per AZ ) **High Available**
-  - Partition : INstances spread across partitions within AZ **Hadoop/Cassendra/Kafka**
+   - Cluster : law latency group in a single AZ **High performance**
+   - Spread  : Spread across underlying hardware ( max 7 per AZ ) **High Available**
+   - Partition : INstances spread across partitions within AZ **Hadoop/Cassendra/Kafka**
 
 ### Elastic Network Interfaces ( ENI )
 
@@ -161,18 +161,18 @@
 ### EC2 Hibernate
 
  - When EC2 
-  - Stop : Data on EBS is kept
-  - Terminate : EBS volues ( root ) is destroyed
+   - Stop : Data on EBS is kept
+   - Terminate : EBS volues ( root ) is destroyed
 
  - On EC2 Start
-  - OS Boot , User scripts run
-  - Application starts, caches get warmed
+   - OS Boot , User scripts run
+   - Application starts, caches get warmed
 
  - Hibernate
-  - RAM is preserved
-  - Instance boots faster
-  - RAM is written to the EBS
-  - EBS should be encrypted
+   - RAM is preserved
+   - Instance boots faster
+   - RAM is written to the EBS
+   - EBS should be encrypted
   
 ## EC2 Instance Storage
   
@@ -195,13 +195,13 @@
 ### AMI ( Amazon Machine Image )
 
  - Customizations of an EC2 instance
-  - Software, configurations, OS, monitoring
-  - Faster boot time
+   - Software, configurations, OS, monitoring
+   - Faster boot time
  - Build for a specific region ( can be copied to other regions )
  - Can launch AMI from 
-  - Public AMI
-  - Private AMI
-  - Marketplace
+   - Public AMI
+   - Private AMI
+   - Marketplace
   
 ### EC2 Instance Store
 
@@ -231,15 +231,15 @@
  - Compatible with linux based AMI
  - Scalable, pay as use
  - Storage classes
-  - Scale mode
-  - Performance mode
-  - Throughput mode
+   - Scale mode
+   - Performance mode
+   - Throughput mode
  - Storage tiers
-  - Standard
-  - EFS/IA ( Infrequently access )
+   - Standard
+   - EFS/IA ( Infrequently access )
  - Availability & Durability
-  - Standard : Multi AZ ( Great for prod )
-  - One Zone : One AZ ( Great for dev )
+   - Standard : Multi AZ ( Great for prod )
+   - One Zone : One AZ ( Great for dev )
 
 ## High Availability and Scalability
 
@@ -247,18 +247,18 @@
 
  - Forward traffic to multiple servers
  - Why use load balancer
-  - Spread load
-  - Expose single point of access ( DNS )
-  - Handle failures seamlessly
-  - Provide SSL
-  - Enfornce stickiness with cookies
-  - High availability
-  - Seperate public traffic from private traffic
+   - Spread load
+   - Expose single point of access ( DNS )
+   - Handle failures seamlessly
+   - Provide SSL
+   - Enfornce stickiness with cookies
+   - High availability
+   - Seperate public traffic from private traffic
  - Types of load balancers
-  - Classic Load Balancer(CLB): HTTP/HTTPS/TCP/SSL **Deprecated**
-  - Application Load Balancer(ALB): HTTP/HTTPS/Web socket
-  - Network Load Balancer(NLB): TPC/TLS/UDP
-  - Gateway Load Balancer: Operates at layer 3
+   - Classic Load Balancer(CLB): HTTP/HTTPS/TCP/SSL **Deprecated**
+   - Application Load Balancer(ALB): HTTP/HTTPS/Web socket
+   - Network Load Balancer(NLB): TPC/TLS/UDP
+   - Gateway Load Balancer: Operates at layer 3
 
 ### ALB
 
@@ -267,21 +267,21 @@
  - Support Http2/Websocket
  - Support redirects ( http to https )
  - Routing tables to different target groups
-  - Based on path: example.com/users & example.com/posts
-  - Based on hostname: users.example.com & posts.example.come
-  - Based on query strings and headers: example.com?id=123&type=user
+   - Based on path: example.com/users & example.com/posts
+   - Based on hostname: users.example.com & posts.example.come
+   - Based on query strings and headers: example.com?id=123&type=user
  - Great fit for micro services and container based applications ( Docker, ECS )
  - Has port mapping feature to redirect to dynamic ports of ECS
  - ALB target groups
-  - EC2 instances ( HTTP )
-  - ECS tasks ( HTTP )
-  - Lambda functions ( HTTP request translated to JSON event )
-  - IP addresses
+   - EC2 instances ( HTTP )
+   - ECS tasks ( HTTP )
+   - Lambda functions ( HTTP request translated to JSON event )
+   - IP addresses
  - Fixed host name
  - Clients don't see ip'x of applications directly
-  - ip : x-forwarded-for
-  - port : x-forwarded-port
-  - protocol : x-forwarded-proto
+   - ip : `x-forwarded-for`
+   - port : `x-forwarded-port`
+   - protocol : `x-forwarded-proto`
 
 ### Network Load Balancer
 
@@ -298,32 +298,32 @@
  - Same client always redirect to same instance behind load balancer
  - CLB, ALB and NLB support this
  - Cookie names
-  - Application base cookies
-   - Custom cookie
-    - Generated by the target
-    - Can include custom attributes
-    - Cookie name must be individually specified for teach target group
-    - **AWSALB,AWSALBAPP,AWSALBTG**  names reserved for the ALB
+   - Application base cookies
+     - Custom cookie
+     - Generated by the target
+     - Can include custom attributes
+     - Cookie name must be individually specified for teach target group
+     - **AWSALB,AWSALBAPP,AWSALBTG**  names reserved for the ALB
    - Application cookie
-    - Generated by the LB
-    - Name is **AWSALBAPP**
-  - Duration base cookies
-   - Cookie generated by the LB
-   - Cookie name is **AWSALB** for ALB and **AWSELB** for CLB
+     - Generated by the LB
+     - Name is **AWSALBAPP**
+   - Duration base cookies
+     - Cookie generated by the LB
+     - Cookie name is **AWSALB** for ALB and **AWSELB** for CLB
 
 ### ELB: Cross zone load balancing
 
  - With cross zone LB: Each load balancer instance distributes evently across all registered instances
  - Without cross zone LB: Requests are distributed in the instances of the node of the ELB
  - ALB
-  - Enabled by default ( Can disable at target group level)
-  - No charge for cross AZ
+   - Enabled by default ( Can disable at target group level)
+   - No charge for cross AZ
  - NLB
-  - Disabled by default
-  - Charged if enabled
+   - Disabled by default
+   - Charged if enabled
  - CLB 
-  - Disabled by default
-  - No charge if enabled
+   - Disabled by default
+   - No charge if enabled
 
 ### ELB: SSL/TLS certificates
 
