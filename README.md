@@ -327,3 +327,52 @@
 
 ### ELB: SSL/TLS certificates
 
+  - SSL Certificate encrypt traffic betwen client and load balancer. ( in flight encryption)
+  - SSL(Secure Socker Layer) use to encrypt connections
+  - TLS(Transport Layer Security) is the newer version
+  - SSL Certificate has a expiry date
+  - LB manage certificates using ACM(AWS Certificate Manger)
+  - HTTPS listner
+    - Must specify a default certificate
+    - Can add optional certificates for multiple domains
+    - Client can use SNI(Server Name Indication) to specify hostname they reach
+  - SNI
+    - Solves the problem of loading **multiple certificates** in to one server
+    - Client indicate the hostname to initiate SSL handshake
+    - Only works for ALB, NSB and Cloudfront
+
+### ELB: Connection draining
+
+  - Connection draning(CLB), Deregistration delay(ALB/NLB)
+  - Time to complete in-flight request while the instance is deregistering or unhealthy
+  - No requests sent while instance is deregistering
+
+### Auto scaling group(ALG)
+
+  - Scale out/in to match demand
+  - Ensure have minimum/maximum instances running
+  - ALG attributes
+    - Launch template
+      - AMI + Instance type
+      - EC2 User date
+      - EBS Volumes
+      - Security Groups
+      - SSH Key pair
+      - IAM roles for ec2 instances
+      - Network + Subnet info
+      - Load balancer info
+  - Can scale based on cloud watch alarms
+
+### ALG: Scaling policies
+  - Target tracking scaling
+    - Align to a default baseine
+    - Eg: Keep average ASG CPU usage around 40%
+  - Simple/Step scaling: 
+    - When CloudWatch alarm triggers(CPU > 70%) add two units
+    - When CloudWatch alarm triggers(CPU < 30%>) remove one units
+  - Schedule actions
+    - Based on known actions
+    - Eg: Scale capacity on Friday
+  - Predictive scaling
+    - Forecast load and schedule ahead
+  - After a scaling activity there is a cool down priod ( default 300 sec)
