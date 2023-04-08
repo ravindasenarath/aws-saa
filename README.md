@@ -8,6 +8,7 @@
 - [EC2 Solutions Architect Level](#ec2-solutions-architect-level)
 - [EC2 Instance Storage](#ec2-instance-storage)
 - [High Availability and Scalability](#high-availability-and-scalability)
+- [AWS Fundermentals ( RSA + Aurora + ElastiCache )](#aws-fundermentals--rsa--aurora--elasticache-)
 
 ## IAM And AWS CLI
 
@@ -400,3 +401,121 @@
     - Scaling capability
     - Storage backup by EBS(gp2 or io1)
     - When free db storage running out it scales automatically ( need to set maximum storage threshold )
+    - Automatically scale storage if
+      - Free space less than 10%
+      - Low storage last at least 5min
+      - 6 hours passed since last modification
+
+### RDS Read replicas vs Multi AZ
+
+  - Read Replicas
+    -  Read replicas - read scalability
+    -  Upto 15 Read Replicas
+    -  Witin AZ, Cross AZ or Cross region
+    -  Replication is ASYNC
+    -  For RDS read replicas with in same AZ network cost is free
+  - Multi AZ
+    - SYNC replication
+    - One DNS automatic failover
+    - Not used for scaling 
+
+  - **Can set up read replicas as multi AZ for DR**
+  - Single AZ to multi AZ zero down time operation
+   
+### RDS Custom
+
+  - For oracle and MS SQL Server
+  - Has access to underlying db and OS
+  - De-activate automation mode to perform customization
+
+### Amazon Aurora
+
+  - Proprietary technology
+  - Compatible with Postgres and MySQL
+  - 5x performance of MySQL on RDS or 3x of Postgres
+  - Grows upto 10GB upto 128 TB
+  - Upto 15 replicas ( MySQL only 5)
+  -  Instantaneous failover
+  - Cost 20% more
+  - 6 copies of data across 3 AZ
+  - Self healing
+  - One master ( take writes ) + Upto 15 Read replicas
+  - Writer endpoint and Reader endpoint
+
+### Aurora advance concepts
+
+  - Replica auto scaling ( scale when high reads )
+  - Custom endpoints ( Bigger replicas for high demand use )
+  - Aurora Serverless
+    - Good for infrequent unpredictable workloads
+    - No capasity planning needed
+    - Pay per second
+  - Aurora Multi Master
+    - Failover for writer node
+  - Global Aurora
+    - For disaster recovery
+    - **Take less than 1 second to cross region replication**
+  - Aurora Machine Learning
+    - Enable ML based predictions to your applications via SQL
+    - Support SageMaker, Comprehend
+    - Fraud detection, ads targeting, product recommendation
+
+### RDS & Aurora - Backup and Monitoring
+
+  - Automated backups
+    - Daily full backups
+    - Ability to restore to any point in time(Oldest 5 mins ago)
+  - Manual DB Snapshots
+  - If used for shot time take a snapshot delete database to save money
+  - Aurora backups
+    - 1-35 days(cannot be disabled)
+  - RDS & Aurora Restore options
+    - Creates a new database
+    - Restore MySQL RDS from S3 : Backup > Store in S3 > Restore to RDS
+    - Restore MySQL Aurora cluster from S3 : back up using Percona Xtrabackup > Store in S3 > Restore
+  - Aurora DB cloning
+    - Create new from existing
+    - Useful to create staging db from prod db
+
+### RDS & Aurora Security
+
+  - At-rest encryption ( Master and replica encrypted using KMS )
+  - In flight encryption
+  - IAM Authentication
+  - Security groups
+  - Audit logs can be enabled 
+
+### Amazon RDS Proxy
+
+  - Fully managed proxy for RDS
+  - Pool and share connections
+  - If have lots of connection to reduce stressing on db 
+  - Serverless, autoscaling, high available ( Multi AZ)
+  - Enforce IAM authentication
+  - Not publicly available ( via VPC )
+  - Used for lambda functions
+
+### ElastiCache
+
+  - Managed Redis or Memcached
+  - Cache ( In memory for high performance, low latency)
+  - Need heavy application changes
+  - Session store
+  - Redis
+    - Multi AZ with auto failover
+    - Read replicas to high availability
+    - Bakup and restore features
+  - Memcache
+    - Multi Node
+    - No high availability
+    - Non persistent
+    - No backup and restore
+
+### Elasticache Security
+
+  - IAM for Redis
+  - Redis Auth ( extra security )
+
+### ElastiCache - Redis use case
+  - Gaming leaderboards
+  - 
