@@ -7,6 +7,7 @@
 - [EC2 Fundermentals](#ec2-fundermentals)
 - [EC2 Solutions Architect Level](#ec2-solutions-architect-level)
 - [EC2 Instance Storage](#ec2-instance-storage)
+- [High Availability and Scalability](#high-availability-and-scalability)
 
 ## IAM And AWS CLI
 
@@ -376,3 +377,26 @@
   - Predictive scaling
     - Forecast load and schedule ahead
   - After a scaling activity there is a cool down priod ( default 300 sec)
+
+## AWS Fundermentals ( RSA + Aurora + ElastiCache )
+
+### Amazon RDS overview
+
+  - RDS ( Relational Database Service )
+  - Manged database service for DB use SQL as query language
+  - Supported databases
+    - Postgres
+    - MySQL
+    - MariaDB
+    - Oracle
+    - MS SQL Server
+    - Aurora
+  - Provided fetures
+    - Automated provitioning, OS patching
+    - Continues backups and restore to specific timestamp
+    - Monitoring dashboards
+    - Read replicas for improved read performance
+    - Muti AZ for DR ( Disaster recovery )
+    - Scaling capability
+    - Storage backup by EBS(gp2 or io1)
+    - When free db storage running out it scales automatically ( need to set maximum storage threshold )
