@@ -9,6 +9,7 @@
 - [EC2 Instance Storage](#ec2-instance-storage)
 - [High Availability and Scalability](#high-availability-and-scalability)
 - [AWS Fundermentals ( RSA + Aurora + ElastiCache )](#aws-fundermentals--rsa--aurora--elasticache-)
+- [Route 53](#route53)
 
 ## IAM And AWS CLI
 
@@ -518,4 +519,127 @@
 
 ### ElastiCache - Redis use case
   - Gaming leaderboards
-  - 
+
+
+## Route 53
+
+### DNS
+
+  - Domain registrar: Amazon Route 53, GoDaddy
+  - Name server: Resolve dns queries
+  - DNS records: A, AAAA, CNAME, NS
+  - Top level domain(TLD): .com, .us, .gov
+  - Second level domain(SLD): amazon.com, google.com
+
+### Route 53 overview
+
+  - Highly available, scalable, fully managed and Authoritative DNS(client can update DNS)
+  - Can check health of resources
+  - Records
+    - Domain/subdomain: eg example.com
+    - Record type: A or AAAA
+    - Value: ip
+    - Routing policy: How to respond
+    - TTL: Time the record is cached
+  - Supported DNS record types
+    - A/AAAA/CNAME/NS
+    - CAA/DS/MS etc
+  - Route 53 Record types
+    - A - maps a hostname to IPv4
+    - AAAA - maps a hostname to IPv6
+    - CNAME - maps a hostname to another hostname
+      - Target domain name must have an A or AAAA record
+      - Can't create for top node of a DNS namespace ( Zone Apex )
+    - NS - Name servers for the hosted zone
+  - Hosted Zones (A container for records that define how to route traffic to a domain and subdomains)
+    - Public Hosted Zones: How to route traffic on the internet ( eg myApp.mypublicdomain.com)
+    - Private Hosted Zones: How to route traffic within one or more VPCs ( eg app1.company.internal)
+
+### TTL(Time to live)
+
+  - Ask client to cache IP for certain time
+  - Mandatory for all records expect Alias
+
+### CNAME vs Alias
+
+  - CNAME
+    - Point hostname to any other hostname(myapp.mydomain.com => app.other.com)
+    - **Only for non root domain**
+  - Alias
+    -  Points a hostname to an aws resource ( myapp.mydomain.com => abcd.amazonaws.com )
+    - **Works for root and non root domains**
+    - Free of charge
+    - Native health check
+    - Alias records is always of type A/AAAA for aws resources(IPv4/IPv6)
+    - Can't set TTL
+    - ELB, CloudFront, API Gateway, Elastic Beanstalk environments, S3 Websites, VPC Interface endpoints, Global Accelerator accelerator, Route 53 record in the same hosted zone 
+    - Can't set alias to EC2 dns name
+
+### Routing policy - Simple
+
+  - Route traffic to a single resource
+  - Can specify multiple values(client choose one random)
+  - Can't associate with health checks
+
+### Routing policy - Weighted
+
+  - Control % of requests go to each specific resource
+  - Assign each record a relative weight
+  - % = weight of specific record/ sum of all weights
+  - Doesn't sum upto 100
+  - Can assiciate with health checks
+  - Use for load balancing, Testing new versions
+  - Assing 0 not to send traffic to one
+
+### Routing policy - Latency
+
+  - Redirect to the resource that has the latest latency to the client
+  - Based on traffic between users and AWS regions
+  - Can associate with health checks
+
+### Routing policy - Health checks
+
+  - Check health of public resources
+  - Types
+    - Monitor an endpoing
+    - Monitor other health checks
+    - Monitor Cloudwatch alarms
+
+  - Calculated Health Checked
+    - Combine the result of multiple health checks
+    - Can use conditions
+    - Upto 256 child health checks
+    - Usage: Perform maintenance without causing all health checks to fail
+  - Health CHecks - Private Hosted Zone
+    - Create a CloudWatch Metric and associate a CloudWatch Alarm
+
+### Routing policy - Failover ( Active-Passive )
+
+  - If health health check failed redirect to secondary record
+
+### Routing policy - Geolocation
+
+  - Routing based on user location
+  - Use cases: Localization, Restrict content
+
+### Routing policy - Geoproximity
+
+  - Based on geographic location of users and resources
+  - Ability to shift more traffic to the resources based on a defined bias
+
+### Routing policy - Ip-based routing
+
+  - Based on clients IP addresses
+  - Provide a list of CIDRs for clients
+  - Use cases: Optimize performance, reduce network cost
+
+### Routing policy - Multi - Values
+
+  - Routing traffic to multiple resources
+  - Can associate with health checks
+  - Up to 8 healthy records
+  - **Not a substitude for ELB**
+
+### 3rd Party Domains vs Route 53
+
+  - Copy name servers from 3rd party dns registrar
