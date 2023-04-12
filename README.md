@@ -644,6 +644,7 @@
 
   - Create a public hosted zone
   - Update NS records on 3rd party website to use Route 53 NS.
+  - Copy name servers from 3rd party dns registrar
 
 ## S3
 
@@ -746,3 +747,188 @@
   - Intelligent Tiering
     - Move between tiers based on usage
 
+## Advanced S3
+
+### Lifecycle rules
+
+  - Transition actions
+    - Configure objects to transition into another storage class
+    - eg: Move to Standard IA after 30 days from creating
+
+  - Expiration actions
+    - Configure objects to expire(delete) after some time
+    - Delete incomplete multi part uploads
+
+  - S3 Analytics - Storage class analysis
+    - Help to decide when to transition objects into right storage class.
+    - Recommended for Standard and Standard IA
+
+### S3 Requester Pays
+
+  - Requester instead of bucket owner pays for the request
+
+### S3 Event notifications
+
+  - Events: Object created, Object removed etc
+  - React to events and notify then to SNS, SQS and lambda functions
+  - Has integration with Amazon event bridge
+
+### S3 Performance
+
+  - Scale into high request rates and has low latency
+  - At least 3500 PUT/COPY/POST/DELETE or 5500 GET/HEAD requests per second per prefix
+  - Improve performance
+    - Multi part upload
+    - S3 Transfer Acceleration - Increase transfer speed by using edge locations
+    - S3 byte range fetches - Parallelize GETs by reqeusting specific byte ranges
+
+### S3 Select & Glacier Select
+
+  - Use SQL to perform server side filtering
+
+### S3 Batch operation
+
+  - Perform bulk operations on exiting S3 objects using a single request
+  - Examples
+    - Change attributes, metadata
+    - Encrypt unencrypted objects
+  - Can use S2 to get list of objects to perform operation on
+
+## S3 Security
+
+### S3 Encryption
+
+  - SSE(Server side encryption) 
+    - Server-side encryption with Amazon S3 managed keys(SSE-S3) - Enabled by default
+      - Keys handled, managed and owned by AWS
+      - Encryption type **AES256**
+      - Must set header to **x-amz-server-side-encryption: AES256**
+    - Server-side encryption with KMS keys stored in AWS KMS(SSE-KMS)
+      - Advance control with KMS (audit key usage)
+      - Must set header to **x-amz-server-side-encryption: aws:kms**
+    - Server-side encryption with customer provided keys(SSE-C)
+      - HTTPS must be used
+  - Client side encryption
+
+  - Encryption in transit(SSL/TLS)
+    - has two endpoints(http/https)
+
+### S3 Default Encryption
+
+  - SSE-S3 automatically applies to new objects
+  - Can force encryption using bucket policy( Refuse PUT without proper headers )
+
+### S3 CORS
+
+  - Need to be enabled
+
+### MFA delete
+
+  - Force generated code when permenantly deleting a object
+  - Need to enable versioning first
+  - Only bucket owner can enable/disable MFA delete
+
+### S3 Access logs
+
+  - Log all access to S3
+  - Can be anlyzed using Athena
+  - Target bucket should be in same region
+
+### Pre-signed urls
+  - User given a pre-signed url inherit the permissions of the user that granted the url for GET/PUT
+
+### Glacier vault lock & S3 Object Lock
+
+  - Glacier vault lock
+    - Adopt(Write once Read Many) model
+    - Create a vault lock policy
+    - Lock the policy for future edits(Can't changed or deleted)
+  - S3 Object lock
+    - Need vesioning
+    - Object level block
+    - Retention mode: Complience
+      - Object version cannot be overritten or deleted by any user
+      - Retention cannot be changed or shortened
+    - Retention mode: Governance
+      - Some users have special permission to change
+  - Legal hold
+    - Protect object indefinitly
+    - Can remove with the *s3:PutObjectLegalHold* permission
+
+### S3 Access Points
+
+  - Simplify security management
+  - Access points for different data
+  - Each has own dns name(Internet origin or VPC origin)
+  - Grant R/W permission to prefix via a policy
+  - Bucket policy become simple
+  - VPC origin - access via VPC(Need a VPC endpoint and it's policy must allow access)
+
+### S3 Lambda
+
+  - Need S2 access points
+  - Alter objects before provided
+
+## CloudFront and Globl Accelerator
+
+### Overview
+
+  - Content Delivary Network(CDN)
+  - Improve read performance, content is cached at the edge
+  - 216 points globally
+  - Get DDoS protection, integrated with Shield and Web applicaiton firewall
+  - Origins
+    - S3 bucket
+      - Enhance security with OAC(Origin Access Control)
+      - Can used as an ingress(upload to S3)
+    - Custom endpoint
+      - ALB
+      - EC2
+      - S3 website
+      - Any http backend
+
+### CloudFront - ALB as an origin
+
+  - Direct to EC2: Should allow IP's of edge location to access
+  - Via ALB
+
+### Geo restriction
+
+  - Can restrict base on country ( allow/ blocked)
+
+### Price classes
+
+  - Cost differs based on edge location
+  - Price classes
+    - All: Best performance
+    - 200: Most regions, exclude most expensive regions
+    - 100: Only least expensive regions
+
+### Cache Invalidation
+
+  - Has a TTL
+  - Can force and entire or partial cache refresh
+  - All files or part of files
+
+### Global Accelerator
+
+  - Unicase and Anycast IP ( Anycase multiple servers hold same id and client is routed to the closest one)
+  - GA use anycast
+  - Leverage AWS internal network
+  - Via Edge location to anycast ip
+  - Works with Elastic IP, EC2, ALB, NLB(public or private)
+  - Have health checks
+  - Only need to whitelist 2 ips, DDos, Shield protection
+
+### Global accelerator vs CloudFront
+
+  - CloundFront
+    - Improve performance for cacheable content
+    - Improve performance for dynamic content
+    - Content is served at edge
+
+  - GA
+    - Improve performance of wide range of apps over TCP  or UDP
+    - Proxy packets form Edge to application
+    - Suits for non http 
+    - Good for http that need static ip
