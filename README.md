@@ -642,4 +642,107 @@
 
 ### 3rd Party Domains vs Route 53
 
-  - Copy name servers from 3rd party dns registrar
+  - Create a public hosted zone
+  - Update NS records on 3rd party website to use Route 53 NS.
+
+## S3
+
+### Overview
+
+  - Infinitely scaling storage
+  - Use casesa
+    - Used for backup & storage
+    - Disaster recovery
+    - Archive
+    - Host application, media
+    - Data lakes, big data analytics
+    - Static websites
+  - Buckets
+    - Store objects(files) in **buckets**(directories)
+    - Buckets must have a globally unique name
+    - Buckets are defined in globak level
+    - Naming convention
+      - No uppercase, No underscore
+      - 3 - 63 long
+      - Not ips
+  - Objects
+    - Objects have a key
+    - Key is the full path (eg: s3://my-bucket/my_folder/my_file.txt)
+    - Values are content of body
+      - Max 5TB
+      - More than 5GB must use multi part upload
+
+### S3 - Security
+
+  - Bucket policy
+    - User based: IAM policies
+    - Resource based
+      - Bucket policies - cross account
+      - Object Access Control List(ACL)
+      - Bucket Access COntrol List(ACL)
+  - IAM principle can access and S3 object if
+    - User IAM permission ALLOW it OR the resource policy ALLOWS it AND there is no explicit DENY
+
+  - Encryption
+
+### S3 - Bucket policies
+
+  - Json policy
+    - Resource: Buckets and Objects
+    - Effect: Allow or Deny
+    - Actions: Set of API to allow ro deny
+    - Principle: The account or user to apply the policy to
+
+  - Use cases
+    - Grant public access
+    - Force objects to be encrypted at upload
+    - Grand access to another account
+
+### S3 - Static Website Hosting
+
+  - If **403 Forbidden** check bucket policy for public access
+
+### S3 - Versioning
+
+  - Best practice against unintended deltes
+  - Files not versioned prior to enabling versioning will have version **null**
+
+### S3 - Replication
+
+  - Must enable versioning in source and destination
+  - Cross Region Replication(CRR)
+  - Same Region Replication(SRR)
+  - Use Cases
+    - CRR - Complience, lower latency
+    - SRR - Log aggregation, live replication
+  -  After enabling only new objects are replicated, to replicate existing object use **S3 Batch Replication**
+  - No chaning replication
+
+### S3 - Storage classes
+
+  - Standard - General Purpose
+    - 99.99% Available
+    - Used for frequently accessed data
+    - Low latency and high throughput
+    - Use cases: Big data, mobile & gaming apps, content distribution
+  - Standard - Infrequent Access (IA)
+    - For data less frequently accessed
+    - Lower cost
+    - 99.9% avaialable
+    - Use Cases: Disaster Recovery, backups
+  - One Zone - Infrequent Access
+    - High durability in single AZ
+    - 99.5% Available
+    - Store secondary copies or recreatable
+  - Glacier Instant Retrieval
+    - Min storage 90 days
+  - Glacier Flexible Retrieval
+    - Expedited(1-5min), Standard(3-5 hr), Bulk(5-12hr - free)
+    - Min storage 90 days
+  - Glacier Deep Archive
+    - Long term storage
+    - Standard(12 hr), Bulk(48hr)
+    - Min storage duration 180days
+  - Intelligent Tiering
+    - Move between tiers based on usage
+
