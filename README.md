@@ -932,3 +932,83 @@
     - Proxy packets form Edge to application
     - Suits for non http 
     - Good for http that need static ip
+
+## AWS Storage Extras
+
+### Snow family
+
+  - Highly secure portable devices to collect and process data at the edge and migrate data in and out of AWS
+  - Data migratio
+    - Snowcone
+    - Snowball Edge
+    - Snow Mobile
+  - Edge computing
+    - Snowcone
+    - Snowball Edge
+
+  - Snowball Edge
+    - Storage optimized: 80TB
+    - Compute optimized: 42TB/28TB
+  - Snowcone: Small, Portable, Light(2.1kg)
+    - Snowcone(8TB)
+    - Snowcone SSD(14TB)
+  - Can sent back offline or use **AWS Data Sync**
+
+  - Snow mobile
+    - A truck
+    - For more than 10PB of data
+  - AWS OpsHub - Software to work with snow family devices
+
+### Snowball into Glacier
+
+  - Cannot directly import to Glacier
+  - Import to S3 and use lifecycle policy import into Glacier
+
+### Amazon FSX
+
+  - Launch 3rd party high performances on AWS
+  - FSx for Lustre
+    - Parellel distributed file system for large scale computing
+    - Machine lerning, High Performance Computing
+    - Seamless integration with S3
+    - File systems
+      - Scratch file system(Temporary, data not replicated, high burst)
+    - Persistent File System
+      - Long term
+      - Data replicated multi AZ 
+  - FSx for NetApp ONTAP
+    - Point in time instantaneous cloning
+  - FSx for Windows file server
+    - Can mount on EC2
+    - Support MS Distributed file system Namespaces
+    - Can configured to be Multi AZ
+  - FSx for OpenZFS
+    - Point in time instantaneous cloning
+
+### Storage Gateway
+
+  - Bridge between onpermises and AWS cloud data
+  - Use cases: Disaster Recovery, Migration, Cache low latency file access
+  - Types
+    - S3 Gateway
+      - Most recently used files are cached at gateway
+    - FSx Gateway
+      - Access to FSx for Windows file server
+      - Local cache for frequently accessed data
+    - Voulme Gateway
+      - Cached Volumes
+      - Stored Volumes
+    - Tape Gateway
+
+### Transfer Family
+
+  - Fully managed service for file transfers in/out of S3/Amazon EFS using FTP
+  - Supported Protocal
+    - AWS Transfer for FTP
+    - AWS Transfer for FTPS
+    - AWS Transfer for SFTP
+
+### Data Sync
+
+  - Move large amount of data in/out AWS
+  - Can sync to S3/FSx/EFS
