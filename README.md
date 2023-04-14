@@ -1012,3 +1012,69 @@
 
   - Move large amount of data in/out AWS
   - Can sync to S3/FSx/EFS
+
+## Decouping applications: SQS,SNS,Kinesis,ActiveMQ
+
+### SQS
+
+  - Simple Queue Service
+  - SQS - Standard Queue
+    - Unlimited throughput, Unlimited messages in queue
+    - Limit 256KB per message
+    - Can have duplicate messages
+    - Can have out of order messages
+  - Can integrate with ASG for automatic scalling
+  - Secuirty
+    - Inflight (HTTPS)
+    - At rest using KMS keys
+    - Access control with IAM policies
+    - SQS Access policies
+### Message visibility timeout
+
+  - When message is polled it become invisible for a configurable time to other consumes
+  - Default message visibility timeout is **30 Sec**
+  - If processing takes more time use **ChangeMessageVisibility** api to get more time
+
+### Long polling
+
+  - When a consumer request message from queue and if there are no messages consumer can wait for a given time. 
+  - Decrease number of API calls to SQS while increasing efficiency of the applicatoin.
+
+### SQS -FIFO Queue
+
+  - Ordering of the messages in the queue is gurenteed
+  - Limited throughput
+
+### SNS
+  - Simple Notification Service
+  - Pub/Sub method
+  - Have the concept of topic (100k topics limit)
+  - Subscribers
+    - Email
+    - SMS and mobile notification
+    - Http(s) endpoints
+    - SQS
+    - Lambda
+    - Kinesis Data Firehose
+  - Publish
+    - Topic Publish ( to the topic )
+    - Direct Publish ( to the endpoint )
+  - Secuirty (Same as SQS)
+
+### SNS + SQS (Fan out pattern)
+
+  - Push once into a SNS topic and subscribe many SQS
+  - Cross region delivery
+  - FIFO topic has similar features as SQS FIFO
+  - Can only have SQS FIFO queues as subscribers
+  - Limited throughtput
+  - Message filtering - Filter messages sent to SNS
+
+### Kinesis
+
+  - Makes it easy to collect, process and analyze stream data
+  - Services
+    - Kinesis Data Streams: capture, process and store data streams
+    - Kinesis Data Firehose: Load data streams into AWS data stores
+    - Kinesis Data Analytics: Analyze the data streams using SQL or Apache Flink
+    - Kinesis Video Streams: Capture process and store video streams
