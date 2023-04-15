@@ -1078,3 +1078,98 @@
     - Kinesis Data Firehose: Load data streams into AWS data stores
     - Kinesis Data Analytics: Analyze the data streams using SQL or Apache Flink
     - Kinesis Video Streams: Capture process and store video streams
+
+### Kinesis Data Streams
+  - Need to provision shards
+  - Input Record ( key, blob[up to 1MB])
+  - Output Record ( Partition Key, Sequence No, Data blob)
+  - Consumers: Apps, Lambda, Kinesis Data firehose, Kinesis Data Analytics
+  - Modes
+    - Provisioned mode
+    - On-demand mode
+  - Security
+    - IM policies
+    - In flight Https
+    - At rest uisng KMS
+    - VPC endpoints are available
+
+### Kinesis Data Firehose
+
+  - Sources: Apps, Clients, SDK/KPL, Kinesis Agent, Kenesis Data Streams, Amazon CloudWatch, AWS IoT
+  - Optionally transform using Lambda
+  - Written in batches to destinations
+  - Destinations
+    - AWS: S3, Redshift(via S3), OpenSearch
+    - 3rd Party: Datadog, Mongo, Splunk,
+    - HTTP endpoint
+  - Send all or failed data to S3
+  - Near Real time 
+  - No replay
+
+### Kinesis Data Analytics
+  - In analytics section
+
+### Amazon MQ
+
+  - Migrate form non propritary service
+  - Managed message broker for RabbitMQ and ActiveMQ
+  - For High availability (multi AZ) need EFS
+
+## Containers on AWS(ECS, Fargate, ECR and EKS)
+
+### ECS
+
+  - Elastic Container Service
+  - Launch Docker containers on AWS = Launch ECS Tasks on ECS clusters
+  - EC2 Launch type : Must provision & maintain infrastructure(EC2)
+    - Each EC2 instance run ECS Agent
+    - EC2 Instance profile
+      - Used by ECS agent
+      - Makes API calls to ECS service
+      - Send container logs to CloudWatch
+      - Pull docker images from ECR
+      - Refer to secrets manager
+    - ECS Task Role
+      - Allow each task to have a specific role
+  - Fargate Launch Type: Serverless
+    - Need to craete task definition
+  - Data Volumes(EFS)
+    - Mount EFS onto ECS tasks to share data between tasks
+
+### ECS Auto Scaling
+
+  - AWS Application Auto Scaling
+    - CPU utilization
+    - Memory utilization
+    - Request count per target
+  - Target Tracking - based on target value
+  - Step Scaling -  based on CloudWatch alarm
+  - Scheduled Scaling - based on specified date/time
+  - Auto Scaling EC2 Instances
+    - Auto Scaling Group Scaling
+      - Scale ASG based on CPU
+      - Add EC2 Instances
+    - ECS Cluster Capacity Provider
+      - Automatically provision and scale
+
+### ECR (Elastic Container Registry)
+
+  - Store and manage docker images
+  - Backed by S3
+  - Access controlled by IAM
+
+### EKS (Elastic Kubernates Service)
+
+  - Managed Kubernates Cluster
+  - Support ECS and Fargate launch mode
+  - Node Types
+    - Managed Node groups
+      - Use EC2 but manged it self
+    - Self Managed Nodes
+      - Use EC3 but need to manage manually
+    - Fargate
+      - No management needed
+
+### AWS App  Runner
+  - Fully managed service for web applications and APIs
+  - Use cases: web apps, APIs, Micro services, RAD
