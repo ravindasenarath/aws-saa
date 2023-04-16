@@ -1173,3 +1173,154 @@
 ### AWS App  Runner
   - Fully managed service for web applications and APIs
   - Use cases: web apps, APIs, Micro services, RAD
+
+## Serverless
+
+  - Do not manage servers
+
+### Lambda functions
+
+  - Virtual functions
+  - Limited by time - short execution
+  - Run on demand
+  - Scaling is automated
+  - Upto 10GB of RAM (Improve CPU and Network)
+  - Integrations
+    - API Gateway
+    - Kinesis
+    - DynamoDB
+    - S3
+    - CloudFront
+    - CloudWatch Events/Event Bridge
+    - CloudWatch Logs
+    - SNS/SQS
+    - Cognito
+
+### Limits(Per Region)
+  - Execution
+    - Memory allocation: 128MB - 10GB(1MD increments)
+    - Maximum execution time: 900 seconds(15min)
+    - Environment variables: 4KB
+    - Disk capacity: 512MB to 10GB
+    - Concurrent executions: 1000(can be increased)
+  - Deployments
+    - Function deployment size: 50MB
+    - Uncompressed deployment size: 250MB
+
+### Lambda@Edge & CloudFront functions
+
+  - Edge functions
+    - Code attach to CloudFront distributions
+    - Run close to users to minimize latency
+
+  - CloudFront Functions
+    - Lightweight written in JS
+    - Sub ms startup millions of request/second
+    - Used to change viewer requests and responses
+    - Use cases
+      - Cache key normalization(Transform headers, cookies, query strings, URL)
+      - Header Manipulation
+      - URL rewrites
+      - Request Authenticaiton/Authrization
+
+  - Lambda@Edge
+    - Lambda in NodeJS or Python
+    - Scales to 1000s of request/second
+    - Used to change CloudFront requests/responses
+    - Use Cases
+      - Longer tasks
+      - Network access to external services
+      - File access or access to html body
+
+### Lambda in VPC
+  - Lambda launched in AWS own VPC so cannot access resources in private VPC
+  - Define VPC id and subnet and security groups
+
+### DynamoDB
+  - Fully manged, highly available, Multi AZ
+  - NoSQL
+  - Provisioned Capacity mode
+    - Pre plan
+  - On-Demand Mode
+    - Automatic
+    - More expense
+
+### DynamoDB - Advanced Features
+  - DynamoDB Accelerator(DAX)
+    - Solve read congestion by caching
+  - Stream Processing
+    - Ordered stream of item-level notifications in a table
+  - Use cases
+    - React to changes in real time
+    - Real time analytics
+    - Insert into derivative tables
+    - Cross region replication
+    - Invoke Lambda on changes
+  - DynamoDB Streams
+    - 24 hr retention
+    - Limited consumers
+    - Process using Lambda or Kinesis adapter
+  - Kinesis Data Stream
+    - 1 yr retention
+    - High no of consumers
+    - Process using Lambda, Kinesis Data Analytics, Kinesis Data Firehose, Glue Streaming ETL
+  - Global table
+    - Table replicated across multiple tables
+    - Law latency accessibility
+    - Need to enable Dynamo db streams
+  - TTL
+    -  Automatically delete after expiry timestamp
+  - Integration with S3
+    - Can export to S3
+    - Then query with Athena
+
+### API Gateway
+
+  - Create public REST API's
+  - Proxy requests
+  - Features
+    - With Lambda: Fully serverless
+    - API versioning
+    - Handle environments
+    - Handle security
+    - API Keys, request throttling
+    - Transform and validate req/res
+    - Cache responses
+  - Integrations
+    - Lambda
+    - HTTP
+    - AWS Service
+  - Endpoit Types
+    - Edge Optimized
+      - Global
+      - Via CloudFront
+    - Regional
+    - Private
+      - Only for VPC
+  - Authentication
+    - IAM roles
+    - Cognito
+    - Custom Authorizer 
+  
+### Step Functions
+
+  - Build serverless visual workflow to orchestrate lambda functions
+  - Can have human approval steps
+
+### Cognito
+
+  - GIve users and identity to interact with web/mobile apps
+  - Cognito user pools
+    -  Sign in functionality
+    - Integrate with API Gateway and ALB
+  - Cognito Identiy Pools(Federated Identity)
+    - Provide AWS credentials to can access AWS resources directly
+    - Integrate as identity provider
+
+  - Serverless database of users for web/mobile
+  - Simple login
+  - Password reset
+  - Email/Phone Number verification
+  - MFA
+  - Federated Identities
+  
