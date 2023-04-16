@@ -9,7 +9,15 @@
 - [EC2 Instance Storage](#ec2-instance-storage)
 - [High Availability and Scalability](#high-availability-and-scalability)
 - [AWS Fundermentals ( RSA + Aurora + ElastiCache )](#aws-fundermentals--rsa--aurora--elasticache-)
-- [Route 53](#route53)
+- [Route 53](#route-53)
+- [S3](#s3)
+- [Advanced S3](#advanced-s3)
+- [S3 Security](#s3-security)
+- [CloudFront and Global Accelerator](#cloudfront-and-global-accelerator)
+- [AWS Storage extras](#aws-storage-extras)
+- [Decouping applications: SQS,SNS,Kinesis,ActiveMQ](#decouping-applications-sqssnskinesisactivemq)
+- [Containers on AWS(ECS, Fargate, ECR and EKS)](#)
+- [Serverless](#serverless)
 
 ## IAM And AWS CLI
 
@@ -869,7 +877,7 @@
   - Need S2 access points
   - Alter objects before provided
 
-## CloudFront and Globl Accelerator
+## CloudFront and Global Accelerator
 
 ### Overview
 
@@ -1323,4 +1331,3 @@
   - Email/Phone Number verification
   - MFA
   - Federated Identities
-  
