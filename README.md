@@ -18,6 +18,8 @@
 - [Decouping applications: SQS,SNS,Kinesis,ActiveMQ](#decouping-applications-sqssnskinesisactivemq)
 - [Containers on AWS(ECS, Fargate, ECR and EKS)](#)
 - [Serverless](#serverless)
+- [Databases in AWS](#aws-saa#databases-in-aws)
+- [Data & Analytics](#aws-saa#data--analytics)
 
 ## IAM And AWS CLI
 
@@ -1459,3 +1461,73 @@
 
 ### Big data ingestion pipeline
   - Fully sererless pipeline
+
+## Machine Learning
+
+### Rekognition
+  - Find objects, people, text, scenes in **imaegs and videos**
+  - **Facial analysis** and **facial search**
+  - Use cases
+    - Labeling
+    - Content Moderation
+    - Text detection
+    - Face detection and analysis
+    - Face search and verification
+    - Celebrity Recognition
+    - Pathing( for sports name analysis)
+
+### Transcribe
+  - Convert **speach to text**
+  - Use deep learning process called automatic speech recognition
+  - Automatically remove personally identifiable information(PII)
+  - Supports Automatic Language Identification for multi-lingual audio
+  - Use cases
+    - Transcribe cutomer service calls
+    - Automate closed captioning and subtitling
+
+### Polly
+  - Convert **Text into speech**
+  - Use Lexicon to customize pronunciation of words with pronumciation lexicons
+  - SSML(Speech Synthesis Markup Language)
+    - Emphasizing
+    - Breathing sounds, whispering
+
+
+### Translate
+  - Natural and accurate **language transalte**
+
+### Lex + Connect
+  - Amazon Lex(technology powers Alexa ) 
+  - Amazon Connect
+    - Receive calls, create contact flows, cloud based virtual contact center)
+    - Can hook with CRM
+
+### Comprehend
+  - Natural Language Processing(NLP)
+  - Find insights and relationships in text
+    - Langulage
+    - Extract key phrases, people etc
+    - Understand positive or negative
+
+### Comprehend Medical
+  - Detects and return useful informaiton in clinical text
+
+### SageMaker
+  - Fully managed service to build ML models 
+
+### Forecast
+  - Fully managed service that use ML to deliver accurate forecasts
+  - Use casesa: Product demand planning, financial planning
+
+### Kendra
+  - Document search service powered by ML
+  - Extract answers from document
+  - Natural language serach
+
+### Personalize
+  - ML service build apps with real time personalize recomendations
+    - Integrates into websites, SMS, email
+
+### Textract
+  - Use to extract text from any scanned documents
+  - Extract driver licence no, dob etc
