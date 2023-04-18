@@ -1331,3 +1331,131 @@
   - Email/Phone Number verification
   - MFA
   - Federated Identities
+
+## Databases in AWS
+
+### RDS
+  - Managed PostgreSQL/MySQL/Oracle/SQL Server/MariaDB/Custom
+  - Support Read replicas and Multi AZ
+
+### Aurora
+  - Compatible API for PostgreSQL/MySQL
+  - Storage: Data in 6 replicas, across 3 AZ - Highly available, self healing, auto scaling
+  - Custom endpoints for writer and reader
+  - Serverless
+  - Multi Master for continues failover
+  - Aurora Global
+
+### ElastiCache
+  - Manged Redis/Memcached
+  - Must provision EC2 Instance type
+  - Redis suport clustering and MultiAZ, Read replicas
+  - Code changes needed
+
+### DynamoDB
+  - Proprietary, managed serverless, NoSQL
+  - Can replace Elasticache
+  - DAX cluster
+
+### S3
+  - Key value store
+  - Great for Big objects
+  - Serverless
+
+### DocumentDB
+  - Aurora for MongoDB
+  - Fully managed, highly available across 3 AZ
+
+### Neptune
+  - Fully managed graph database
+
+### Keyspaces
+  - Managed Apache Cassandra
+
+### QLDB
+  - Quantum Ledger Database
+  - Ledger for recording financial transactions
+  - Immutable system
+
+### Timestream
+  - Fully managed,fast, scalable, serverless time series database
+
+## Data & Analytics
+
+### Athena
+  - Serverless query service for data in S3
+  - Use SQL
+  - Can use QuickSight to create report and dashboards
+  - Improve performance
+    - Use columnar data for cost saving(Parquet or ORC)
+    - Use Glue to convert data
+    - Compress data
+    - Partition dataset in S3
+    - Use larger files
+  - Federated Query
+    - Run queries in other services or on permises data sources
+
+### Redshift
+  - Database and analytics engine
+  - Based on Postgres
+  - OLAP - online analytical processing
+  - Columnar storage of data
+  - Pay as go
+  - Can configure to automatically copy snapshot to another region
+  - Redshift Spectrum
+    - Query data in S3 without loading it
+
+### OpenSearch
+  - Successor of ElasticSearch
+  - Can search any field, even partially matches
+  - Opensearch dashboards for visualization
+
+### EMR
+  - Elastic Map Reduce
+  - Create hadoop clusters(Big Data)
+  - Made of hundreds of EC2 clusters
+  - Use cases: data processing, machine learning, web indexing
+  - Nodes
+    - Masters: Long running
+    - Core Node: Long running
+    - Task Node : Can use spot
+
+### QuickSight
+  - Serverless machine learning powered business intelligence service to create interactive dashboards
+  - Use cases: Business analytics, visualization
+  - In memory computation using SPICE
+  - Column level security
+
+### Glue
+  - Managed ETL service
+  - Prepare and transform data for analytics
+  - Glue data catalogue: catalogue of datasets
+  - Glue job bookmarks: prevent data re process
+  - Glue Elastic views: combine and replicated data scross multiple data stores using SQL
+  - Glue DataBrew: Normalize data
+  - Glue Studio: GUI for ETL
+  - Glue Streaming ETL
+
+### Lake Formation
+  - Helps create data lakes
+  - Data lake = central place to have all your data for analytics purpose
+  - Discover, cleanse, transform and injest data into data lake
+  - Out of the box blue prints
+  - Fine grained access controls(row and columns)
+  - Centralized permissions 
+
+### Kinesis data analytics
+  - For SQL
+    - Sources: Kinesis Data Streams, Kinesis Data Firehose
+    - Use SQL and use S3 to enrich data
+    - Sinks: Kinesis Data Streams, Kinesis Data Firehose
+  - For Apache Flink
+    - Use Java, Scala, SQL
+
+### MSK(Managed Streaming for Apache Kafka)
+  - Fully managed apache kafka
+  - Create, Update, Delete clusters
+  - Deploy cluster on VPC, Multi AZ
+
+### Big data ingestion pipeline
+  - Fully sererless pipeline
