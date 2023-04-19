@@ -1646,4 +1646,43 @@
   - Notification
     - Using EventBridge
 
- 
+ ## IAM Advanced
+
+### AWS Organizations
+  - Allows to manage multiple AWS accounts
+  - Management account and member accounts
+  - Consolidated billing
+  - Share reserved instances and savings plans discounts
+  - Can define Service Control Policies to all memeber accounts
+
+### IAM - Advanced Policies
+  - IAM Conditions
+    - aws:SourceIp : Restrict client IP from API calls are made
+    - aws:RequestedRegion: Restricting region
+    - ec2:ResourceTag: Restrict base on tags
+    - ec2:MultiFactorAuthPresent: Force MFA
+    - aws:PrincipleOrgID: Rescrict to organization
+
+ ### IAM Roles vs Resource based policies
+  - When you assume a role, you give up your original permissions and take the permissions assigned to the role.
+  - When using resource based policy , doesn't have to give up permissions
+
+### IAM - Policy Evaluation Logic
+  - Permission boundaries
+    - Supported for users and roels (not groups)
+    - Advanced feature to use a manged policy to set maximum permissions an IAM can get
+
+### IAM - Identify Center
+  - SSO for all AWS accounts
+
+### AWS Directory Services
+  - Way to create Active directory in AWS
+  - AWS Manged Microsoft AD
+  - AD Connector
+  - Single AD
+
+### AWS Control Tower
+  - Set up and govern a secure and compliant multi-account AWS environment
+  - Guardrails
+    - Preventive Guardrail - Using SCPs
+    - Detective Guardrails  - Using AWS Config
