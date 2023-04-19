@@ -1531,3 +1531,119 @@
 ### Textract
   - Use to extract text from any scanned documents
   - Extract driver licence no, dob etc
+
+## AWS Monitoring & Audit(CloudWatch, CloudTrail, Config)
+
+### CloudWatch metrics
+  - Metrics for every services in AWS
+  - Metric is a variable to monitor(CPU, Network, RAM)
+  - Metric belong to namespaces
+  - Dimension is an attribute of a metric
+  - Metric Streams(Near real time delivery to KDF or 3rd party)
+
+### CloudWatch Logs
+  - Store logs on AWS
+  - Log groups: name, usually app name
+  - Log stream: app instance
+  - CloudWatch Logs can send logs to 
+    - S3
+    - KDS
+    - KDF
+    - Lambda
+    - OpenSearch
+  - Sources
+    - SDK, Logs Agent, Unified Agent
+    - Elastic beanstalk
+    - ECS
+    - Lambda
+    - VPC flow
+    - API Gateway
+    - CloudTrail
+    - Route 53
+  - Metric filter and Insights
+    - filter logs
+  - Not near real time or real time
+  - Subscriptions(Send logs to some where)
+  - Log aggregation, multi account and multi region
+
+### CloudWatch Agent & CloudWatch Logs Agent
+  - Logs agent
+    - Old version
+    - Can only send to CloudWAtch Logs
+  - CloudWAtch Unified Agent
+    - Collect additional system level metrics
+    - Can configure using SSM Parameter Store
+    - Metrics
+      - CPU
+      - Disk metrics
+      - RAM
+      - Netstat
+      - Processes
+      - Swap space
+      
+### CloudWatch Alarm
+  - Used to trigger notifications
+  - Status
+    - OK
+    - INSUFFICIENT_DATE
+    - ALARM
+  - Targes
+    - Actions on EC2
+    - Trigger auto scaling action
+    - Send notification to SNS
+  - Composite alarms(combine multiple alarms)
+
+### EventBridge
+  - Schedule Cron jobs
+  - Event Pattern: Event rules to react to a service doing something(IAM user login)
+  - Sources > Filter > JSON > Destination
+  - Types
+    - Default Event Bus (AWS services)
+    - Partner Event Bus (Partner services)
+    - Custom Event Bus (Custom apps)
+  - Can archive events
+  - Replay archived events
+  - Schema Registry
+    - analyze the events in your bus and infer the schema
+    - Tell application how data looks like
+  - Resource based policy
+    - Manage permissions
+    - Aggregate events of organization
+
+### CloudWatch Insights and Operational Visibility
+  - Collect, aggregate, summerize metrics and logs from containers
+  - Lambda Insights
+  - Contributor insights
+    - Analyze log data and create timeseries display contributor data
+  - Lambda Insights
+  - Contributor Insights
+  - Application Insights
+
+### CloudTrail
+  - Provide **governance, compliance and audit** for your AWS account
+  - History of events/API calls 
+  - Kind of event
+    - Management events
+      - Operations that are performed on resources
+      - Read events/Write events
+    - Data events
+      - Not logged by default
+      - eg: Reas of S3
+    - CloudTrail Insight Events
+      - Detect unusual activities
+      - Can integrate with EventBridge
+  - Events are stored for 90 days
+
+### AWS Config
+  - Helps with auditing and recording compliance of resources
+  - Eg: Is there unrestrictd SSh access to security groups, Do my buckets have public access
+  - Per region can be aggregated cross regions
+  - Config Rules(Does not prevent)
+    - AWS managed rules
+    - Custome rules
+  - Remediations
+    - Automate remediation of non-compliant resources using SSM automation documents
+  - Notification
+    - Using EventBridge
+
+ 
