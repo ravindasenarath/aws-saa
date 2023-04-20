@@ -1684,5 +1684,118 @@
 ### AWS Control Tower
   - Set up and govern a secure and compliant multi-account AWS environment
   - Guardrails
-    - Preventive Guardrail - Using SCPs
-    - Detective Guardrails  - Using AWS Config
+    - Preventive Guardrails - Using SCPs
+    - Detective Guardrails - Using AWS Config
+
+## Security & Encryption(KMS, SSM Parameter Store, CloudHSM, Shield, WAF)
+
+### KMS(Key Mangement Service)
+  - Symmetric (AES-256 keys)
+    - Single Key
+    - Don't get access to key
+  - Asymmetric (RSA & ECC key pair)
+    - Public and private key pair
+  - Types of KMS keys
+    - AWS Owned keys(free)
+    - AWS Managed Key (free)
+    - Customer managed key (priced)
+  - Automatic key rotation
+  - KMS key policies
+    - Default KMS Key policy
+      - Complete access to the root user
+    - Custom KMS Key Policy
+
+### KMS Multi Region Key
+  - Identical KMS keys in different regions that can be used interchangeably
+  - Have same key ID, key material, automatic rotation
+  - Encrypt in one region and decrypt in another region
+  - NOT global
+  - Use cases: DynamoDB Global, Aurora Global
+
+### S3 Replication with Encryption
+  - Unencrypted objects and objects encrypted with SSE-S3 are replicated by default
+  - Objects encrypted with SSE-KMS 
+  - Can use multi-region keys but they are treated as independent keys by S3
+
+### Sharing encrypted AMI via KMS
+   -  Source accoune encreypt with KMS key
+   -  Add **Launch Permission** to target account
+   -  Share KMS keys
+   -  Create IAM role at target account with enough permissions
+
+### SSM Parameter Store
+  - Secure store for configuration and secrets
+  - Encryption(optional)
+  - Versioning
+  - Notification via EventBridge
+  - Support hierarchy
+  - Expiration policy(TTL)
+
+### AWS Secret Manger
+  - Capability to force rotation of secrets every X days
+  - Automatic generation of secrets using Lambda
+  - Integration with Amazon RDS
+  - Multi region secrets
+    - Replicate secrets across multiple AWS regions
+    - Secret manager keep them in sync
+
+### AWS Certificate Manager(ACM)
+  - Easily provision, manage and deploy **TLS certificates**
+  - Support both private and public certificates
+  - Free for public certificates
+  - Auto TLS certificate renewal
+  - ACM sends daily expiration events starting 45 days prior to expiration to EventBridge
+  - AWS Config has a managed rule to check expiring certificates
+  - Integration API Gateway 
+    - Edge Optimized: TLS must be in same region as CloudFront
+    - Regional: TLS must be imported on API Gateway, in the same region as the API Stage
+
+### AWS WAF(Web Application Firewall)
+  - Protest against Layer 7 exploits
+  - Layer 7 is HTTP
+  - Deploy on
+    - ALB
+    - API Gateway
+    - CloudFront
+    - AppSync GraphQL API
+    - Cognito User Pool
+  - Define Web ACL(Access Control List) Rules
+    - IP Set
+    - SQL injection, Cross-Site Scripting
+    - Geo-match(block countries)
+    - Rate based : DDos protection
+  - Web ACL are Regional except for CoundFront
+  - Rule group - reusable set of rules
+
+### AWS Shield: protect from DDos attack
+  - Shield Standard
+  - Shield Advanced
+    - For more sophisticated attacks
+
+### Firewall Manager
+  - Manage rules in all accounts of an AWS organisation
+
+### GuardDuty
+  - Intelligent threat discovery
+  - Use ML
+  - Input data
+    - CloudTrail event logs
+    - VPC flow logs
+    - DNS logs
+    - Kubernates Audit logs
+  - Good against CryptoCurrency attacks
+  - Can link to EventBridge
+
+### Amazon Inspector
+  - Automated security assessments
+  - For EC2
+    - Using SSM agent
+    - unintented network accessibility
+    - OS vulnerabilities
+  - For Container images at ECR
+  - For Lambda functions
+
+### Amazon Macie
+  - Fully manage data security and data privacy service
+  - Machine learning & pattern matching to discover and protect sensitive data
+  - Sensitive data(Personal identifiable Information)
