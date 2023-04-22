@@ -1955,3 +1955,57 @@
   - Active flow inspection
 
 ## Disaster Recovery & Migrations
+
+### Overview
+  - Kinds of DR
+    - On-permise -> On-permise
+    - On-permise -> AWS Cloud
+    - AWS Cloud region A -> AWS cloud region B
+  - Terms
+    - RPO: Recovery Point Objective
+      - How often backup is taken
+      - How much time tolerated
+    - RTO: Recovery Time Objective
+      - Amount of down time between disaster
+  - DR Strategies
+    - Backup & Restore
+      - Easy, High RPO, High RTO, Cheap
+    - Pilot Light
+      - Small version of critical app running in cloud
+      - Low RPO, Low RTO
+    - Warm Standby
+      - Full system up and running at minimum size
+      - Costly
+    - Hot Site / Multi Site Approach
+      - Very low RTO, RPO
+      - Very expensive
+
+### Database Migration Service(DMS)
+  - Migrate databases to AWS, resilient, self healing
+  - Need to craete EC2 to perform the replication tasks
+  - Schema convertion Tool(SCT)
+    - When need to convert schema
+
+### RDS & Aurora Migration
+  - Take DB Shnapshot and restore in Aurora
+  - Crete read replica and once no replication lag promote to own DB cluster
+  - Use Percona XtraBackup to backup in S3(For external Mysql)
+
+### On-Premise strategy with AWS
+  - Download Amazon Linux 2 as a VM(iso) and restore in VMWare etc
+  - AWS Application Discovery Service
+  - AWS Database Migration Service(DMS)
+  - AWS Server Migration Service(SMS)
+
+### AWS Backup
+  - Centrally manage and automate backups
+  - Can creaet backup policies(Backup Plans)
+  - Backup Valut Lock
+    - Backup cannot be 
+    - Even root user can't delete
+
+### Application Migration Service(MGN)
+  - Plan migration by gathering on permisses data center
+  - Agentless Discovery
+  - Agent-based Discovery(more info)
+  - Result can view at AWS migration Hub
