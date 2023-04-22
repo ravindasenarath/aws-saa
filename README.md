@@ -1799,3 +1799,159 @@
   - Fully manage data security and data privacy service
   - Machine learning & pattern matching to discover and protect sensitive data
   - Sensitive data(Personal identifiable Information)
+
+## Networking (VPC)
+
+### CIDR
+  - Classless Inter-Domain Routing - Method of allocating IP addresses
+  - BaseIP
+    - Represents an IP contained in the range
+  - SubnetMask: How many bits can change
+    - Two forms
+      - /8  -> 255.0.0.0
+      - /16 -> 255.255.0.0
+      - /24 -> 255.255.255.0
+      - /32 -> 255.255.255.255
+    - Allows part of the underlying IP to get additional next values from base IP
+      - 192.168.0.0/32 -> allows 1 IP(2^0) -> 192.168.0.0
+      - 192.168.0.0/31 -> allows 2 IP(2^1) -> 192.168.0.0 - 192.168.0.1
+      - 192.168.0.0/30 -> allows 4 IP(2^2) -> 192.168.0.0 - 192.168.0.3
+      - 192.168.0.0/29 -> allows 8 IP(2^3) -> 192.168.0.0 - 192.168.0.7
+
+### Default VPC
+  - Has Internet connectivity and all EC2 inside have public IPv4
+
+### VPC
+  - Virtual Private Cloud
+  - Mutp 5 per region(soft limit)
+  - Max 5 CIDR per region
+
+### Subnet
+  - AWS reserves 5 IP addresses(first4 and last one)
+  - Eg CIDR block 10.0.0.0/24
+    - 10.0.0.0  - Network address
+    - 10.0.0.1  - Reserved for VPC router
+    - 10.0.0.2  - Reserved for Amazon provided DNS
+    - 10.0.0.3  - Reserved for future use
+    - 10.0.0.255 -  Network broadcast address
+
+### Internet Gateway (IGW)
+  - Allow resources in VPC to connect to Internet
+  - IGW need a route table updated also
+
+### Bastion Host
+  - To SSH into private EC2 instances
+  - Bastion is in a public usbnet in same VPC
+  - Bastion host security group must allow inbout from internet on port 22 from restricted CIDR(company CIDR)
+  - Security group of EC2 should allow traffic private IP of Bastion host
+
+### NAT Instances
+  - Network Address Translations
+  - Ec2 in private subnets to connect to internet
+  - Must disable source/destination check
+  - Must have a Elastic IP attached
+  - Preconfigured Amazon Linux AMI agailable
+
+### NAT Gateway
+  - AWS managed NAT
+  - Created in a specific AZ and use an elastic IP
+  - Can't use by EC2 in same subnet
+  - Require an IGW(Private subnet -> NATGW -> IGW)
+  - Need multiple AZ NAT for fault tolerance
+
+### Security groups & NACLs
+  - Stateless(Security group is stateful)
+  - Both ALLOW and DENY rules
+  - Like a firewall, control traffic from and to subnets
+  - One NACL per subnet, new subnets are assigned the Default NACL
+  - User define NACL Rules
+    - Rules have a number
+    - Higher precedence with lower number
+    - Fist rule match drive the decision
+    - Last rule is * and deny everything
+  - Ephemeral Ports
+    - Clients connect to a defined port expect a response on an ephemeral port
+  - Ephemeral port range should be allowed in NACL in respective cases
+
+### VPC Peering
+  - Connect two VPC using AWS network
+  - Must not have overlapping CIDR
+  - Not transitive
+  - Must update route tables in each VPC
+
+### VPC Endpoints
+  - Services to access other services without internet 
+  - Use PrivateLink
+  - In case of issues check
+    - DNS settings in VPC
+    - Route tables
+  - Interface Endpoints(PrivateLink)
+    - Provision an ENI(private IP), must attach to security group
+    - Support most services
+    - Paid
+    - Preferred when connection from on permisses or different VPC
+  - Gateway Endpoints
+    - Provisions a gateway must be used as a target in a route table
+    - Support S3 and DynamoDB
+    - Free
+
+### VPC Flow Logs
+  - Capture IP traffic going into interfaces
+  - Help to monitor connectivity and troubleshoot issues
+
+### Site to Site VPN, Virtual Private Gateway & Customer Gateway
+
+  - Site to Site VPN
+    - Customer Gateway : Corperate side, If device doesn't have a public IP can use behind a NAT device
+    - VPN Gateway/VGW(Virtual Private Gateway) : VPC side
+    - S2S connection betwen public internet
+    - If need to ping EC2 need to enable ICMP protocol
+  - AWS VPN CloudHub
+    - Secure communication between multiple sites, if u have multiple VPN
+    - Low cost hub and spoke model for primary or secondary network connectivity between VPN
+
+### Direct Connect(DX) & Direct Connect Gateway
+  - Direct Connect(KX)
+    - Dedicated private connection from a remote network to VPC
+    - Need Virtual Private Gateway on VPC
+    - Access public resources(S3) and private(EC2) on VPC
+  - Direct conmect gateway
+    - To setup one or more VPC in many regions
+  - Connection types
+    - Dedicated connections: 1Gbps, 10Gbps, 100Gbps
+  - Hosted Connections: 50Mbps, 500Mbps to 10Gbps
+  - Lead times are often longer than 1 month for new connection
+  - Encrypt - no encryption
+
+### Transit Gateway
+  - Solve complex VPC peering
+  - Have transitive peering between thousands of VPC and on permises in hub and spoke model
+  - Regional, can work cross region
+  - Route tables: Limit who can talk to who
+  - Support **IP Multicast**
+  - **ECPM - Equal cost multi path routing** ( Create multiple Site-to-Site VPN connections to increase the bandwidth of connections)
+  - Share direct connect betwen multiple VPN
+    - VPN(s) -> Transit GW -> Direct Connect GW -> Direct Connect endpoint -> Customer Router
+
+### VPC Traffic Mirroring
+  - Capture and inspect network traffic in VPC
+  - Content inspection, threat moitoring
+
+### IPv6 for VPC
+  - IPv4 cannot be disabled for VPC and subnets
+  - If EC2 cannot be launched in subnet
+    - No available IPv4 in subnet
+    - Create a new IPv4 CIDR
+
+### Egress only Internet Gateway
+  - Used for IPv6 only
+  - Similar to NAT GW but for IPv6
+  - Must update route tables
+
+### AWS Network Firewall
+  - Sophisticated way to project entire VPC
+  - Layer 3 to 7 protection
+  - Traffic filtering: Allow, drop or alert for traffic that matches rules
+  - Active flow inspection
+
+## Disaster Recovery & Migrations
