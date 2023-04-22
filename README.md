@@ -18,8 +18,14 @@
 - [Decouping applications: SQS,SNS,Kinesis,ActiveMQ](#decouping-applications-sqssnskinesisactivemq)
 - [Containers on AWS(ECS, Fargate, ECR and EKS)](#)
 - [Serverless](#serverless)
-- [Databases in AWS](#aws-saa#databases-in-aws)
-- [Data & Analytics](#aws-saa#data--analytics)
+- [Databases in AWS](#databases-in-aws)
+- [Data & Analytics](#data--analytics)
+- [Machine Learning](#machine-learning)
+- [Monitoring & Audit](#aws-monitoring--auditcloudwatch-cloudtrail-config)
+- [IAM Advanced](#iam-advanced)
+- [Security & Encryption](#security--encryptionkms-ssm-parameter-store-cloudhsm-shield-waf)
+- [Networking & VPC](#networking-vpc)
+- [Disaster Recovery & Backups](#disaster-recovery--migrations)
 
 ## IAM And AWS CLI
 
