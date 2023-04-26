@@ -366,7 +366,7 @@
   - Time to complete in-flight request while the instance is deregistering or unhealthy
   - No requests sent while instance is deregistering
 
-### Auto scaling group(ALG)
+### Auto scaling group(ASG)
 
   - Scale out/in to match demand
   - Ensure have minimum/maximum instances running
@@ -380,6 +380,11 @@
       - IAM roles for ec2 instances
       - Network + Subnet info
       - Load balancer info
+      - You can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost. Hence this is the correct option
+    - Launch configuration
+      - Old way
+      - Immutable
+      - You cannot use a launch configuration to provision capacity across multiple instance types using both On-Demand Instances and Spot Instances.
   - Can scale based on cloud watch alarms
 
 ### ALG: Scaling policies
@@ -778,6 +783,7 @@
   - S3 Analytics - Storage class analysis
     - Help to decide when to transition objects into right storage class.
     - Recommended for Standard and Standard IA
+    - Does not give recommendations for transitions to the ONEZONE_IA or S3 Glacier storage classes.
 
 ### S3 Requester Pays
 
@@ -1211,6 +1217,8 @@
     - CloudWatch Logs
     - SNS/SQS
     - Cognito
+  - Since Lambda functions can scale quickly it is a good idea to deploy a CloudWatch alarm to notify ConcurrentExecutions or Invocations exceed threshold
+  - For reuse of code in more than one lambda function create a Lambda layer for reusable code
 
 ### Limits(Per Region)
   - Execution
@@ -1251,6 +1259,8 @@
 ### Lambda in VPC
   - Lambda launched in AWS own VPC so cannot access resources in private VPC
   - Define VPC id and subnet and security groups
+  - By default Lambda functions operate on a AWS-owned VPC and has access to any public IP or public AWS API
+  - If VPC enabled need to route through a NAT gateway in a public subnet
 
 ### DynamoDB
   - Fully manged, highly available, Multi AZ
@@ -1593,8 +1603,8 @@
     - OK
     - INSUFFICIENT_DATE
     - ALARM
-  - Targes
-    - Actions on EC2
+  - Trigers
+    - Actions on EC2(Terminate, stop)
     - Trigger auto scaling action
     - Send notification to SNS
   - Composite alarms(combine multiple alarms)
@@ -1905,7 +1915,12 @@
   - Capture IP traffic going into interfaces
   - Help to monitor connectivity and troubleshoot issues
 
-### Site to Site VPN, Virtual Private Gateway & Customer Gateway
+### VPC Sharing
+  - Allows multiple AWS accounts to create their resources into a shared and centrally managed VPCs
+  - Owner shares one or more subnets with other accounts that belong to same organization
+  - Participants can view, create, modify and delete resources in subnets shared with them.
+
+### Site to Site(IPsec) VPN, Virtual Private Gateway & Customer Gateway
 
   - Site to Site VPN
     - Customer Gateway : Corperate side, If device doesn't have a public IP can use behind a NAT device
@@ -1928,6 +1943,7 @@
   - Hosted Connections: 50Mbps, 500Mbps to 10Gbps
   - Lead times are often longer than 1 month for new connection
   - Encrypt - no encryption
+  - Data transfer pricing over Direct Connect is lower than data transfer pricing over the internet
 
 ### Transit Gateway
   - Solve complex VPC peering
@@ -2015,3 +2031,19 @@
   - Agentless Discovery
   - Agent-based Discovery(more info)
   - Result can view at AWS migration Hub
+
+## Resource utilization
+
+### AWS Compute Optimizer
+  - Identify under-utilized EC2 instances that may be downsized on an instance by instance basis within the same instance family
+  - Recommends optimal AWS Compute resources for your workloads to reduce costs and improve performance
+  - Helps you choose the optimal Amazon EC2 instance types, including those that are part of an Amazon EC2 Auto Scaling group, based on your utilization data.
+
+### AWS Trusted Advisor
+  - Checks for Amazon EC2 Reserved Instances that are scheduled to expire within the next 30 days or have expired in the preceding 30 days
+  - Trusted advisor does not have a feature to auto-renew Reserved Instances.
+
+### AWS Compute Optimizer
+  - Recommends optimal AWS Compute resources for your workloads to reduce costs
+  - Helps you choose the optimal Amazon EC2 instance types
+  - It does not recommend instance purchase options
