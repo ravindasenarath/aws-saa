@@ -523,6 +523,7 @@
   - Cache ( In memory for high performance, low latency)
   - Need heavy application changes
   - Session store
+  - HIPAA Eligible
   - Redis
     - Multi AZ with auto failover
     - Read replicas to high availability
@@ -697,7 +698,7 @@
 ### S3 - Security
 
   - Bucket policy
-    - User based: IAM policies
+    - User based: IAM policies(only in same account)
     - Resource based
       - Bucket policies - cross account
       - Object Access Control List(ACL)
@@ -774,7 +775,7 @@
 
   - Transition actions
     - Configure objects to transition into another storage class
-    - eg: Move to Standard IA after 30 days from creating
+    - eg: Move to Standard IA after **minimum 30** days from creating
 
   - Expiration actions
     - Configure objects to expire(delete) after some time
@@ -801,7 +802,7 @@
   - At least 3500 PUT/COPY/POST/DELETE or 5500 GET/HEAD requests per second per prefix
   - Improve performance
     - Multi part upload
-    - S3 Transfer Acceleration - Increase transfer speed by using edge locations
+    - S3 Transfer Acceleration - Increase transfer speed(upload/download) by using edge locations
     - S3 byte range fetches - Parallelize GETs by reqeusting specific byte ranges
 
 ### S3 Select & Glacier Select
@@ -941,6 +942,9 @@
   - Works with Elastic IP, EC2, ALB, NLB(public or private)
   - Have health checks
   - Only need to whitelist 2 ips, DDos, Shield protection
+  - Is a good fit for non-HTTP use cases, such as gaming (UDP), IoT (MQTT), or Voice over IP
+  - Use cases
+    - Blue/Green deployments without been subjected to DNS caching on clients
 
 ### Global accelerator vs CloudFront
 
@@ -1051,6 +1055,12 @@
     - At rest using KMS keys
     - Access control with IAM policies
     - SQS Access policies
+  - Recommended use cases
+    - Messaging semantics(message level ack/fail) and visibility timeout
+    - Individual message delay
+    - Dynamically increate the concurrency/throughput at the read time
+    - Scale transparently
+
 ### Message visibility timeout
 
   - When message is polled it become invisible for a configurable time to other consumes
@@ -1114,6 +1124,9 @@
     - In flight Https
     - At rest uisng KMS
     - VPC endpoints are available
+  - Recommended use cases
+    - Ability for multiple appliction to consume the same stream concurrenlty
+    - Ability to consume the records in same order a few hours after
 
 ### Kinesis Data Firehose
 
@@ -1867,6 +1880,8 @@
   - Must disable source/destination check
   - Must have a Elastic IP attached
   - Preconfigured Amazon Linux AMI agailable
+  - Support fort forwarding
+  - Can use as a bastion server
 
 ### NAT Gateway
   - AWS managed NAT
@@ -1874,6 +1889,7 @@
   - Can't use by EC2 in same subnet
   - Require an IGW(Private subnet -> NATGW -> IGW)
   - Need multiple AZ NAT for fault tolerance
+  - Doesn't support port forwarding
 
 ### Security groups & NACLs
   - Stateless(Security group is stateful)
@@ -1976,6 +1992,20 @@
   - Traffic filtering: Allow, drop or alert for traffic that matches rules
   - Active flow inspection
 
+### Amazon VPC console
+  - VPC with a single public subnet
+    - Includes a VPC with a single public subnet and an internet GW
+    - For single tier, public facing web apps
+  - VPC with public and private subnets (NAT)
+    - Inclues a VPC with a public subnet and a private subnet
+    - For multi tier applications ( web app and backend not exposed)
+  - VPC with public and private subnets and AWS Site-to-Site VPN access
+    - Inclues a VPC, public subnet, private subnet and a Virtual Private Gateway(Communicte with client network over an IPSec VPN tunnel)
+    - Extend client network into the cloud and also directly access the internet from VPC
+  - VPC with a private subnet only and AWS Site-to-Site VPN acces
+    - Inclues a VPC, private subnet and a Virtual Private Gateway
+    - Extend your network into the cloud using Amazon's infrastructure without exposing your network to the Internet.
+
 ## Disaster Recovery & Migrations
 
 ### Overview
@@ -2007,6 +2037,8 @@
   - Need to craete EC2 to perform the replication tasks
   - Schema convertion Tool(SCT)
     - When need to convert schema
+  - Use cases
+    - S3 to Kenesis data streams/Lambda..etc
 
 ### RDS & Aurora Migration
   - Take DB Shnapshot and restore in Aurora
