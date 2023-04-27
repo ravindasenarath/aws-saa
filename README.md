@@ -137,6 +137,20 @@
  - Storage Optimized
    - Storage intensive tasks
 
+### EC2 Types
+  - Dedicated hosts
+    - Lanunch EC2 instances onphysical servers that are deciated for customer to use. 
+    - Give visibility and control over how instances are placed on a physical server
+    - Enable customer to use existing server-bound software licences like Windows Server and address corporate compliance and regulatory requriments
+  - Dedicated instances
+    - EC2 instances run in a VPC on hardware that's dedicated to a single customer
+    - May share hardware with other accounts
+    - Cannot be used for existing server-bound software licenses
+  - On-demand instances
+    - Pay by the second
+  - Reserved instanes
+    - Reduce cost by making a commitment to a consistent instance configuration, including instance type and Region for a term of 1 or 3 years.
+
 ### Security groups
 
  - Fundermental network security of AWS
@@ -160,7 +174,7 @@
 
  - When EC2 is Stop/Start public ip will be changed
  - Elastic IP is a fix ip
- - Only 5 Elastic Ips per account
+ - Only 5 Elastic IPs per account
  - Try to avoid
 
 ### Placement groups
@@ -202,6 +216,7 @@
   - Bound to AZ
   - Analogy : Netowrk USB stick
   - By default when instance terminate only root EBS get deleted
+  - If volume is encrypted data moving between the volume and the instance is also encrypted
    
 ### EBS Snapshots
  
@@ -385,6 +400,7 @@
       - Old way
       - Immutable
       - You cannot use a launch configuration to provision capacity across multiple instance types using both On-Demand Instances and Spot Instances.
+      - Can't change once created
   - Can scale based on cloud watch alarms
 
 ### ALG: Scaling policies
@@ -740,6 +756,7 @@
     - SRR - Log aggregation, live replication
   -  After enabling only new objects are replicated, to replicate existing object use **S3 Batch Replication**
   - No chaning replication
+  - **S2 sync** use CopyObject API to copy objects between S3 buckets.
 
 ### S3 - Storage classes
 
@@ -836,6 +853,10 @@
   - Encryption in transit(SSL/TLS)
     - has two endpoints(http/https)
 
+### Cross account access
+  - For cross account access, need to provide permissions on IAM role and bucket policy too.
+  - If same account just permission on IAM and making sure no explicit deny in bucket policy will do.
+
 ### S3 Default Encryption
 
   - SSE-S3 automatically applies to new objects
@@ -889,7 +910,7 @@
 
 ### S3 Lambda
 
-  - Need S2 access points
+  - Need S3 access points
   - Alter objects before provided
 
 ## CloudFront and Global Accelerator
@@ -1076,6 +1097,8 @@
 
   - Ordering of the messages in the queue is gurenteed
   - Limited throughput
+  - 3000 messages per second with batching or 3000 send, receive, delete operations per second
+  - Can't convert existing queue to a FIFO queue
 
 ### SNS
   - Simple Notification Service
@@ -1201,7 +1224,7 @@
     - Managed Node groups
       - Use EC2 but manged it self
     - Self Managed Nodes
-      - Use EC3 but need to manage manually
+      - Use EC2 but need to manage manually
     - Fargate
       - No management needed
 
@@ -1340,6 +1363,7 @@
     - IAM roles
     - Cognito
     - Custom Authorizer 
+      - eg Lambda Authorizer: If existing Identify provider is available can validate/authenticate given user against IdP.
   
 ### Step Functions
 
@@ -1348,8 +1372,9 @@
 
 ### Cognito
 
-  - GIve users and identity to interact with web/mobile apps
-  - Cognito user pools
+  - Give users and identity to interact with web/mobile apps
+  - Cognito User pools
+    - Built in user management or integrate with external identity providers
     -  Sign in functionality
     - Integrate with API Gateway and ALB
   - Cognito Identiy Pools(Federated Identity)
@@ -1368,6 +1393,7 @@
 ### RDS
   - Managed PostgreSQL/MySQL/Oracle/SQL Server/MariaDB/Custom
   - Support Read replicas and Multi AZ
+  - Configure to use SSL for data in transit for added security
 
 ### Aurora
   - Compatible API for PostgreSQL/MySQL
@@ -1376,6 +1402,9 @@
   - Serverless
   - Multi Master for continues failover
   - Aurora Global
+  - Aurora DB cluster
+    - Primary DB Intance: Read/Write, One instance
+    - Aurora Replica: Only Reads
 
 ### ElastiCache
   - Manged Redis/Memcached
@@ -1852,11 +1881,11 @@
 
 ### VPC
   - Virtual Private Cloud
-  - Mutp 5 per region(soft limit)
+  - Max 5 per region(soft limit)
   - Max 5 CIDR per region
 
 ### Subnet
-  - AWS reserves 5 IP addresses(first4 and last one)
+  - AWS reserves 5 IP addresses(first 4 and last one)
   - Eg CIDR block 10.0.0.0/24
     - 10.0.0.0  - Network address
     - 10.0.0.1  - Reserved for VPC router
@@ -1866,17 +1895,17 @@
 
 ### Internet Gateway (IGW)
   - Allow resources in VPC to connect to Internet
-  - IGW need a route table updated also
+  - IGW also need a route table updated
 
 ### Bastion Host
   - To SSH into private EC2 instances
-  - Bastion is in a public usbnet in same VPC
-  - Bastion host security group must allow inbout from internet on port 22 from restricted CIDR(company CIDR)
-  - Security group of EC2 should allow traffic private IP of Bastion host
+  - Bastion is in a public subnet in same VPC
+  - Bastion host security group must allow inbound traffic from Internet on port 22 from restricted CIDR(company CIDR)
+  - Security group of EC2 should allow traffic from private IP of Bastion host
 
 ### NAT Instances
   - Network Address Translations
-  - Ec2 in private subnets to connect to internet
+  - EC2 in private subnets to connect to Internet
   - Must disable source/destination check
   - Must have a Elastic IP attached
   - Preconfigured Amazon Linux AMI agailable
@@ -1941,7 +1970,7 @@
   - Site to Site VPN
     - Customer Gateway : Corperate side, If device doesn't have a public IP can use behind a NAT device
     - VPN Gateway/VGW(Virtual Private Gateway) : VPC side
-    - S2S connection betwen public internet
+    - Site to Site connection betwen public internet
     - If need to ping EC2 need to enable ICMP protocol
   - AWS VPN CloudHub
     - Secure communication between multiple sites, if u have multiple VPN
@@ -1952,7 +1981,7 @@
     - Dedicated private connection from a remote network to VPC
     - Need Virtual Private Gateway on VPC
     - Access public resources(S3) and private(EC2) on VPC
-  - Direct conmect gateway
+  - Direct connect gateway
     - To setup one or more VPC in many regions
   - Connection types
     - Dedicated connections: 1Gbps, 10Gbps, 100Gbps
@@ -1973,7 +2002,7 @@
 
 ### VPC Traffic Mirroring
   - Capture and inspect network traffic in VPC
-  - Content inspection, threat moitoring
+  - Content inspection, threat monitoring
 
 ### IPv6 for VPC
   - IPv4 cannot be disabled for VPC and subnets
@@ -2034,7 +2063,7 @@
 
 ### Database Migration Service(DMS)
   - Migrate databases to AWS, resilient, self healing
-  - Need to craete EC2 to perform the replication tasks
+  - Need to create EC2 to perform the replication tasks
   - Schema convertion Tool(SCT)
     - When need to convert schema
   - Use cases
