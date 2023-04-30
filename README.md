@@ -385,23 +385,31 @@
 
   - Scale out/in to match demand
   - Ensure have minimum/maximum instances running
-  - ALG attributes
-    - Launch template
-      - AMI + Instance type
-      - EC2 User date
-      - EBS Volumes
-      - Security Groups
-      - SSH Key pair
-      - IAM roles for ec2 instances
-      - Network + Subnet info
-      - Load balancer info
-      - You can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost. Hence this is the correct option
-    - Launch configuration
-      - Old way
-      - Immutable
-      - You cannot use a launch configuration to provision capacity across multiple instance types using both On-Demand Instances and Spot Instances.
-      - Can't change once created
+  - Launch template
+    - AMI + Instance type
+    - EC2 User date
+    - EBS Volumes
+    - Security Groups
+    - SSH Key pair
+    - IAM roles for ec2 instances
+    - Network + Subnet info
+    - Load balancer info
+    - You can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost. Hence this is the correct option
+  - Launch configuration
+    - Old way
+    - Immutable
+    - You cannot use a launch configuration to provision capacity across multiple instance types using both On-Demand Instances and Spot Instances.
+    - Can't change once created
   - Can scale based on cloud watch alarms
+  - Termination policies
+    - `default` Useful when Spot allocation strategy evaludated before any other policy. 
+    - `AllocationStrategy` When instance type has changed
+    - `OldestLanuchTemplate` When launch template has changed
+    - `OldestLaunchConfiguration` When Launch configuration has changed
+    - `CLosestToNextInstanceHour` When maximize the use of your instances that have an hourly charge
+    - `NewestInstance` When testing new configuration
+    - `OldestInstance` When upgrading to a new EC2 instance type
+  - Move instances stand by mode to perform upgrade or troubleshooting
 
 ### ALG: Scaling policies
   - Target tracking scaling
@@ -653,7 +661,14 @@
 
 ### Routing policy - Failover ( Active-Passive )
 
-  - If health health check failed redirect to secondary record
+  - Active-Active
+    - All of resources to be available majority of the time
+  - Active-Prassive
+    - When you want a primary resource or group of resources to be available the majority of the time and you want a secondary resource or group of resources to be on standby in case all the primary resources become unavailable. 
+    - If health health check failed redirect to secondary record
+    - For primary resource, create an alias record pointing to ALB with evaludate health check as yes
+    - For secondary resource, create health checks for web servers in data centers
+    - Create two failover alias recrods, one primary and one for secondary resources
 
 ### Routing policy - Geolocation
 
@@ -723,6 +738,7 @@
     - User IAM permission ALLOW it OR the resource policy ALLOWS it AND there is no explicit DENY
 
   - Encryption
+    - Data at rest stored in **S3 Clacier** is automatically encrypted using AES-256
 
 ### S3 - Bucket policies
 
@@ -924,12 +940,15 @@
   - Origins
     - S3 bucket
       - Enhance security with OAC(Origin Access Control)
+        - Principle element should have service as "cloudfront.amazonaws.com" and the condition element should match the CloudFront distribution which contains S3 origin
       - Can used as an ingress(upload to S3)
     - Custom endpoint
       - ALB
       - EC2
       - S3 website
       - Any http backend
+  - Signed cookies
+    - Allow to control who can access your content when user don't want to change their urls or when want to provide access to multiple restricted files
 
 ### CloudFront - ALB as an origin
 
@@ -1189,6 +1208,11 @@
       - Refer to secrets manager
     - ECS Task Role
       - Allow each task to have a specific role
+    - Supported Network Mods
+      - Host Mode: Networking of container directly tied to the host
+      - Bridge Mode: Network bridge is created between the host and the container. Allows remapping of ports.
+      - None mode: No external connectivity
+      - AWSVPC mode:  Each task allocated a seperate ENI. Each task will receive a seperate IP, security group. Helps to get granular monitoring for task network.
   - Fargate Launch Type: Serverless
     - Need to craete task definition
   - Data Volumes(EFS)
@@ -1464,6 +1488,8 @@
   - Can configure to automatically copy snapshot to another region
   - Redshift Spectrum
     - Query data in S3 without loading it
+  - AQUA(Advanced Query Accelerator)
+    - Cache that enhances Redshift
 
 ### OpenSearch
   - Successor of ElasticSearch
@@ -1824,6 +1850,10 @@
     - Rate based : DDos protection
   - Web ACL are Regional except for CoundFront
   - Rule group - reusable set of rules
+  - Rate based rules
+    - Blanket rate-based rule: Prevent source IP address from making excessive requests to entire application
+    - URI-specific rate-based url: Prevent IP address making excessive request to a URI. When computationally expensive resource should be protected.
+    - IP reputation rate-based url: Known malicious IP addresses making excessive requests
 
 ### AWS Shield: protect from DDos attack
   - Shield Standard
@@ -2035,6 +2065,9 @@
     - Inclues a VPC, private subnet and a Virtual Private Gateway
     - Extend your network into the cloud using Amazon's infrastructure without exposing your network to the Internet.
 
+  ### AWS Outposts Family
+    - Fully managed solutions deliering AWS infrastructure and services to virtually any on-permisses or edge locatin for a hybrid experience
+
 ## Disaster Recovery & Migrations
 
 ### Overview
@@ -2077,8 +2110,17 @@
 ### On-Premise strategy with AWS
   - Download Amazon Linux 2 as a VM(iso) and restore in VMWare etc
   - AWS Application Discovery Service
+    - Help plan migration to AWS by collecting usage and configuration data about on permises servers
+    - Integrate with AWS Migration Hub
+      - Agentless discovery
+        - By Application Discovery Service Agentless Collector through VMware vCenter
+        - Identifies virtual machines and hosts associated with vCenter
+      - Agent-based discovery
+        - Deploy agent on each VM
   - AWS Database Migration Service(DMS)
   - AWS Server Migration Service(SMS)
+    - Use if MGN is not available
+    - Deprecated after 31/03/23
 
 ### AWS Backup
   - Centrally manage and automate backups
@@ -2092,6 +2134,9 @@
   - Agentless Discovery
   - Agent-based Discovery(more info)
   - Result can view at AWS migration Hub
+
+### Recycle Bin
+  - Restore accidentally deleted EBS snapshot and EBS-backed AMIs
 
 ## Resource utilization
 
