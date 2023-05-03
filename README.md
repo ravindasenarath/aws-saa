@@ -139,7 +139,7 @@
 
 ### EC2 Types
   - Dedicated hosts
-    - Lanunch EC2 instances onphysical servers that are deciated for customer to use. 
+    - Launch EC2 instances on physical servers that are deciated for customer to use. 
     - Give visibility and control over how instances are placed on a physical server
     - Enable customer to use existing server-bound software licences like Windows Server and address corporate compliance and regulatory requriments
   - Dedicated instances
@@ -182,7 +182,7 @@
  - Strategies
    - Cluster : law latency group in a single AZ **High performance**
    - Spread  : Spread across underlying hardware ( max 7 per AZ ) **High Available**
-   - Partition : INstances spread across partitions within AZ **Hadoop/Cassendra/Kafka**
+   - Partition : Instances spread across partitions within AZ **Hadoop/Cassendra/Kafka**
 
 ### Elastic Network Interfaces ( ENI )
 
@@ -217,13 +217,14 @@
   - Analogy : Netowrk USB stick
   - By default when instance terminate only root EBS get deleted
   - If volume is encrypted data moving between the volume and the instance is also encrypted
+  - Can increase volume while in use
    
 ### EBS Snapshots
  
   - Backups of EBS
   - Use to transfer EBS to another AZ
   - EBS snapshot archive: 75% cheap, take 24-72h to restore
-  - Recycle bin of EBS: Can recover accidental delted EBS
+  - Recycle bin of EBS: Can recover accidental deleted EBS
   - Fast snapshot restore: Cost $$$
   
 ### AMI ( Amazon Machine Image )
@@ -285,7 +286,7 @@
    - Expose single point of access ( DNS )
    - Handle failures seamlessly
    - Provide SSL
-   - Enfornce stickiness with cookies
+   - Enforce stickiness with cookies
    - High availability
    - Seperate public traffic from private traffic
  - Types of load balancers
@@ -366,7 +367,7 @@
   - TLS(Transport Layer Security) is the newer version
   - SSL Certificate has a expiry date
   - LB manage certificates using ACM(AWS Certificate Manger)
-  - HTTPS listner
+  - HTTPS listener
     - Must specify a default certificate
     - Can add optional certificates for multiple domains
     - Client can use SNI(Server Name Indication) to specify hostname they reach
@@ -394,7 +395,7 @@
     - IAM roles for ec2 instances
     - Network + Subnet info
     - Load balancer info
-    - You can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost. Hence this is the correct option
+    - You can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost.
   - Launch configuration
     - Old way
     - Immutable
@@ -402,7 +403,7 @@
     - Can't change once created
   - Can scale based on cloud watch alarms
   - Termination policies
-    - `default` Useful when Spot allocation strategy evaludated before any other policy. 
+    - `default` Useful when Spot allocation strategy evaluated before any other policy. 
     - `AllocationStrategy` When instance type has changed
     - `OldestLanuchTemplate` When launch template has changed
     - `OldestLaunchConfiguration` When Launch configuration has changed
@@ -438,7 +439,7 @@
     - Oracle
     - MS SQL Server
     - Aurora
-  - Provided fetures
+  - Provided features
     - Automated provitioning, OS patching
     - Continues backups and restore to specific timestamp
     - Monitoring dashboards
@@ -704,7 +705,7 @@
 ### Overview
 
   - Infinitely scaling storage
-  - Use casesa
+  - Use cases
     - Used for backup & storage
     - Disaster recovery
     - Archive
@@ -719,6 +720,9 @@
       - No uppercase, No underscore
       - 3 - 63 long
       - Not ips
+    - Bucket Url
+      - `https://mybucketname.s3.region.amazonaws.com`
+      - `https://s3.region.amazonaws.com/myfirstbucket`
   - Objects
     - Objects have a key
     - Key is the full path (eg: s3://my-bucket/my_folder/my_file.txt)
@@ -733,12 +737,13 @@
     - Resource based
       - Bucket policies - cross account
       - Object Access Control List(ACL)
+        - Grant permission when objects are owned by a different account
       - Bucket Access COntrol List(ACL)
   - IAM principle can access and S3 object if
     - User IAM permission ALLOW it OR the resource policy ALLOWS it AND there is no explicit DENY
 
   - Encryption
-    - Data at rest stored in **S3 Clacier** is automatically encrypted using AES-256
+    - Data at rest stored in **S3 Glacier** is automatically encrypted using AES-256
 
 ### S3 - Bucket policies
 
@@ -751,7 +756,7 @@
   - Use cases
     - Grant public access
     - Force objects to be encrypted at upload
-    - Grand access to another account
+    - Grant access to another account
 
 ### S3 - Static Website Hosting
 
@@ -772,7 +777,7 @@
     - SRR - Log aggregation, live replication
   -  After enabling only new objects are replicated, to replicate existing object use **S3 Batch Replication**
   - No chaning replication
-  - **S2 sync** use CopyObject API to copy objects between S3 buckets.
+  - **S3 sync** use CopyObject API to copy objects between S3 buckets.
 
 ### S3 - Storage classes
 
@@ -848,7 +853,12 @@
   - Examples
     - Change attributes, metadata
     - Encrypt unencrypted objects
-  - Can use S2 to get list of objects to perform operation on
+  - Can use S3 Select to get list of objects to perform operation on
+
+### S3 System Metadata objects
+  - `x-amz-server-side-encryption`
+  - `x-amz-version-id`
+  - Content Length
 
 ## S3 Security
 
@@ -1095,6 +1105,10 @@
     - At rest using KMS keys
     - Access control with IAM policies
     - SQS Access policies
+  - Batch actions(Reduce cost or manipulate upto 10 messages with single action)
+    - SendMessageBatch
+    - DeleteMessageBatch
+    - ChangeMessageVisibilityBatch
   - Recommended use cases
     - Messaging semantics(message level ack/fail) and visibility timeout
     - Individual message delay
@@ -1143,6 +1157,9 @@
   - Can only have SQS FIFO queues as subscribers
   - Limited throughtput
   - Message filtering - Filter messages sent to SNS
+
+### Dead letter queue
+  - Direct unprocessed events to SQS or SNS to analyze failure
 
 ### Kinesis
 
@@ -1214,9 +1231,15 @@
       - None mode: No external connectivity
       - AWSVPC mode:  Each task allocated a seperate ENI. Each task will receive a seperate IP, security group. Helps to get granular monitoring for task network.
   - Fargate Launch Type: Serverless
-    - Need to craete task definition
+    - Need to create task definition
   - Data Volumes(EFS)
     - Mount EFS onto ECS tasks to share data between tasks
+  - Task definitions
+    - image
+    - CPU and RAM
+    - Launch type
+    - Network mode
+    - Command
 
 ### ECS Auto Scaling
 
@@ -1371,7 +1394,7 @@
     - Handle security
     - API Keys, request throttling
     - Transform and validate req/res
-    - Cache responses
+    - Cache responses(Can import but can't encrypt)
   - Integrations
     - Lambda
     - HTTP
@@ -1388,6 +1411,8 @@
     - Cognito
     - Custom Authorizer 
       - eg Lambda Authorizer: If existing Identify provider is available can validate/authenticate given user against IdP.
+      - Resource Policies - Allow/Deny access for Source IP, VPC endpoints
+      - Usage Plans
   
 ### Step Functions
 
@@ -1712,7 +1737,7 @@
       - Read events/Write events
     - Data events
       - Not logged by default
-      - eg: Reas of S3
+      - eg: Read from S3
     - CloudTrail Insight Events
       - Detect unusual activities
       - Can integrate with EventBridge
@@ -1720,7 +1745,7 @@
 
 ### AWS Config
   - Helps with auditing and recording compliance of resources
-  - Eg: Is there unrestrictd SSh access to security groups, Do my buckets have public access
+  - Eg: Is there unrestrictd SSH access to security groups, Do my buckets have public access
   - Per region can be aggregated cross regions
   - Config Rules(Does not prevent)
     - AWS managed rules
@@ -1756,7 +1781,7 @@
     - Supported for users and roels (not groups)
     - Advanced feature to use a manged policy to set maximum permissions an IAM can get
 
-### IAM - Identify Center
+### IAM - Identity Center
   - SSO for all AWS accounts
 
 ### AWS Directory Services
@@ -1922,6 +1947,7 @@
     - 10.0.0.2  - Reserved for Amazon provided DNS
     - 10.0.0.3  - Reserved for future use
     - 10.0.0.255 -  Network broadcast address
+  - Subnets CIDR cannot be edited once created
 
 ### Internet Gateway (IGW)
   - Allow resources in VPC to connect to Internet
@@ -1941,6 +1967,7 @@
   - Preconfigured Amazon Linux AMI agailable
   - Support fort forwarding
   - Can use as a bastion server
+  - Can't share between VPCs
 
 ### NAT Gateway
   - AWS managed NAT
@@ -1949,6 +1976,7 @@
   - Require an IGW(Private subnet -> NATGW -> IGW)
   - Need multiple AZ NAT for fault tolerance
   - Doesn't support port forwarding
+  - Can't share between VPCs
 
 ### Security groups & NACLs
   - Stateless(Security group is stateful)
@@ -1985,6 +2013,7 @@
     - Provisions a gateway must be used as a target in a route table
     - Support S3 and DynamoDB
     - Free
+  - Has endopoint policies to control access
 
 ### VPC Flow Logs
   - Capture IP traffic going into interfaces
@@ -2065,8 +2094,8 @@
     - Inclues a VPC, private subnet and a Virtual Private Gateway
     - Extend your network into the cloud using Amazon's infrastructure without exposing your network to the Internet.
 
-  ### AWS Outposts Family
-    - Fully managed solutions deliering AWS infrastructure and services to virtually any on-permisses or edge locatin for a hybrid experience
+### AWS Outposts Family
+  - Fully managed solutions deliering AWS infrastructure and services to virtually any on-permisses or edge locatin for a hybrid experience
 
 ## Disaster Recovery & Migrations
 
@@ -2104,7 +2133,7 @@
 
 ### RDS & Aurora Migration
   - Take DB Shnapshot and restore in Aurora
-  - Crete read replica and once no replication lag promote to own DB cluster
+  - Create read replica and once no replication lag promote to own DB cluster
   - Use Percona XtraBackup to backup in S3(For external Mysql)
 
 ### On-Premise strategy with AWS
@@ -2124,7 +2153,7 @@
 
 ### AWS Backup
   - Centrally manage and automate backups
-  - Can creaet backup policies(Backup Plans)
+  - Can create backup policies(Backup Plans)
   - Backup Valut Lock
     - Backup cannot be 
     - Even root user can't delete
