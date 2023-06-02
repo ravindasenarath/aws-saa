@@ -39,6 +39,12 @@
  - Users can be grouped
  - Groups only contain users, not other groups
  - Users don't have to belong to a group and user can belong to multiple groups.
+ - Thinks only root users are allowed to do
+  - Change account name or root password or root email address
+  - Change AWS support plan
+  - Close AWS account, enable MFA on S3 bucket delete
+  - Create Cloudfront key pair
+  - Register for GovCloud.
  
 ### Permissions
 
@@ -62,6 +68,10 @@
    - Action - List of api calls allowed or denied
    - Resource - List of resources to which actions applied to
    - Condition - Conditions for policy to be in effect ( Optional )
+
+### Service Control Policies
+
+ SCPs are a type of policy that can be used to manage permissions and access to AWS services and resources across an entire organization, or a subset of an organization, such as an AWS account or an organizational unit (OU).
   
 ## IAM MFA
 
@@ -89,6 +99,10 @@
 
  - For services to take actions on behalf of users
  - Give permission for AWS services via IAM roles
+
+### Trust Policy
+  - Define which principle entities(accounts, users, roles) can assume the role.
+  - An IAM role is both an identity and a resource that supports resource-based policies. For this reason, you must attach both a trust policy and an identity-based policy to an IAM role. 
  
 ### IAM Security tools
 
@@ -144,12 +158,18 @@
     - Enable customer to use existing server-bound software licences like Windows Server and address corporate compliance and regulatory requriments
   - Dedicated instances
     - EC2 instances run in a VPC on hardware that's dedicated to a single customer
-    - May share hardware with other accounts
+    - May may share hardware with other instances from the same AWS account that are not Dedicated Instances
     - Cannot be used for existing server-bound software licenses
   - On-demand instances
     - Pay by the second
   - Reserved instanes
     - Reduce cost by making a commitment to a consistent instance configuration, including instance type and Region for a term of 1 or 3 years.
+
+### Tenancy
+  - Default - Runs on shared hardware
+  - Dedinated - Runs on single tenant hardware
+  - Host - Runs on a dedicated host
+  - Tenancy can only change from deciate to host and from host to dedicated
 
 ### Security groups
 
@@ -178,18 +198,25 @@
  - Try to avoid
 
 ### Placement groups
- - To have control over how EC2 placed on AWS infrastructure
- - Strategies
-   - Cluster : law latency group in a single AZ **High performance**
-   - Spread  : Spread across underlying hardware ( max 7 per AZ ) **High Available**
-   - Partition : Instances spread across partitions within AZ **Hadoop/Cassendra/Kafka**
+  - To have control over how EC2 placed on AWS infrastructure
+  - Strategies
+    - Cluster : law latency group in a single AZ **High performance**
+    - Spread  : Spread across underlying hardware ( max 7 per AZ ) **High Available**
+    - Partition : Instances spread across partitions within AZ **Hadoop/Cassendra/Kafka**
+  - Can migrate instance from once placement group to another
+  - Cannot merge placement groups
 
 ### Elastic Network Interfaces ( ENI )
 
- - Logical component in a VPC
- - Virtual Network Card
- - Can create on the fly and attach
- - Bound to AZ
+  - Logical component in a VPC
+  - Virtual Network Card
+  - Can create on the fly and attach
+  - Bound to AZ
+  - Enhancements for Networking mode to higher performance and lower latency network.
+    - Elastic Network Adapter(ENA)
+    - Intel Virtual Function Interface
+    - Elastic Fabric Adapter(EFA)
+  - Has a fixed MAC address
 
 ### EC2 Hibernate
 
@@ -218,6 +245,9 @@
   - By default when instance terminate only root EBS get deleted
   - If volume is encrypted data moving between the volume and the instance is also encrypted
   - Can increase volume while in use
+  - RAID Configuration
+    - RAID 0 - When I/O is important
+    - RAID 1 - When falut tolerance is important
    
 ### EBS Snapshots
  
@@ -226,23 +256,34 @@
   - EBS snapshot archive: 75% cheap, take 24-72h to restore
   - Recycle bin of EBS: Can recover accidental deleted EBS
   - Fast snapshot restore: Cost $$$
+  - Use Data Lifecycle Manager(DLM) to automate creation, retention and delettion of EBS
+
+### Volume Types
+  - General Purpose SSD ( max 16000 IOPS)
+  - Provitioned IOPS SSD ( max 64000 IOPS ) - This volume type support multi attach
+  - Cold HDD ( max 250 IOPS )
+  - Throughput Optimized HDD ( 500 IOPS )
   
 ### AMI ( Amazon Machine Image )
 
- - Customizations of an EC2 instance
-   - Software, configurations, OS, monitoring
-   - Faster boot time
- - Build for a specific region ( can be copied to other regions )
- - Can launch AMI from 
-   - Public AMI
-   - Private AMI
-   - Marketplace
+  - Customizations of an EC2 instance
+    - Software, configurations, OS, monitoring
+    - Faster boot time
+  - Build for a specific region ( can be copied to other regions )
+  - Can launch AMI from 
+    - Public AMI
+    - Private AMI
+    - Marketplace
+  - Copying AMI automatically create a snapshot
   
 ### EC2 Instance Store
-
- - When need high performance hardware disk
- - If instance is stopped loose data
- - Eg buffer, cache
+  - Temporary block storage
+  - When need high performance hardware disk
+  - If instance is stopped loose data
+  - Eg buffer, cache
+  - Can attach when launching the instance
+  - Can't detach and attach to a different instance
+  - Data persists only for the life time of instance
  
 ### EBS Volume Types
 
@@ -260,21 +301,36 @@
  
 ### Amazon EFS ( Elastic File System )
 
- - Network file system
- - Multi AZ
- - Highly available, scalable, Expensive
- - Compatible with linux based AMI
- - Scalable, pay as use
- - Storage classes
-   - Scale mode
-   - Performance mode
-   - Throughput mode
- - Storage tiers
-   - Standard
-   - EFS/IA ( Infrequently access )
- - Availability & Durability
-   - Standard : Multi AZ ( Great for prod )
-   - One Zone : One AZ ( Great for dev )
+  - Network file system
+  - Multi AZ
+  - Highly available, scalable, Expensive
+  - Compatible with linux based AMI
+  - Scalable, pay as use
+  - POSIX file system
+  - Storage classes
+    - Scale mode
+    - Performance mode
+    - Throughput mode
+  - EFS replication
+    - Replicate EFS within region or between regions
+  - Storage class
+    - EFS One Zone ( Great for dev )
+      - EFS One Zone
+      - EFS One Zone-Infrequent Access (EFS One Zone-IA). 
+    - EFS Standard ( Great for prod )
+      - EFS Standard
+      - EFS Standard-IA
+  - Performance mode
+    - General Purpose
+    - Max I/O
+  - Throughput mode
+    - Elastic
+    - Provisioned
+    - Bursting
+
+### Non bootable volumes
+
+  - Throughput Optimized HDD (st1) and Cold HDD (sc1) volume types CANNOT be used as a boot volume
 
 ## High Availability and Scalability
 
@@ -293,6 +349,7 @@
    - Classic Load Balancer(CLB): HTTP/HTTPS/TCP/SSL **Deprecated**
    - Application Load Balancer(ALB): HTTP/HTTPS/Web socket
    - Network Load Balancer(NLB): TPC/TLS/UDP
+    - Expose fixed IP to the public
    - Gateway Load Balancer: Operates at layer 3
 
 ### ALB
@@ -384,7 +441,7 @@
 
 ### Auto scaling group(ASG)
 
-  - Scale out/in to match demand
+  - Scale out(expand)/in(reduce) to match demand
   - Ensure have minimum/maximum instances running
   - Launch template
     - AMI + Instance type
@@ -404,13 +461,31 @@
   - Can scale based on cloud watch alarms
   - Termination policies
     - `default` Useful when Spot allocation strategy evaluated before any other policy. 
-    - `AllocationStrategy` When instance type has changed
+      - Priority provided for On-Demand vs Spot 
+      - Oldest launch template unlexx instance use a launch configuration
+    - `AllocationStrategy` Balance instace type within an ASG
     - `OldestLanuchTemplate` When launch template has changed
     - `OldestLaunchConfiguration` When Launch configuration has changed
     - `CLosestToNextInstanceHour` When maximize the use of your instances that have an hourly charge
     - `NewestInstance` When testing new configuration
     - `OldestInstance` When upgrading to a new EC2 instance type
+  1. Determine which Availability Zones have the most instances and at least one instance that is not protected from scale-in. 
+  2. Determine which instances to terminate to align the remaining instances to the allocation strategy for the On-Demand or Spot Instance that is terminating. 
+  3. Determine whether any of the instances use the oldest launch template or configuration
+     1. Determine whether any of the instances use the oldest launch template unless there are instances that use a launch configuration. 
+     2. Determine whether any of the instances use the oldest launch configuration. 
+  4. After applying all of the above criteria, if there are multiple unprotected instances to terminate, determine which instances are closest to the next billing hour.
   - Move instances stand by mode to perform upgrade or troubleshooting
+  - Warm Pool - Pre initialized pool EC2's to quickly scale the ASG
+  - Lifecycle hooks - Execute a custom action when a life cycle event occurs
+  - For software upgrades put the instance in Standby mode, Post upgrades, move instance back to InService mode.
+  - Spot instance
+    - Spare EC2 that can same up to 90% of on demand price
+    - Can be interrupted by AWS for capacity requirements with 2 min notification
+  - Spot block
+    - Allow to request Spot instance for 1-6 hours to avoid being interrupted
+  - Spot fleet
+    - Set of Spot and On demand instances launched to meet target capacity
 
 ### ALG: Scaling policies
   - Target tracking scaling
@@ -425,8 +500,10 @@
   - Predictive scaling
     - Forecast load and schedule ahead
   - After a scaling activity there is a cool down priod ( default 300 sec)
+  - Rebalancing: Launch new intances before terminating old ones
+  - Scaling: Terminate unhealthy instances before creating new ones
 
-## AWS Fundermentals ( RSA + Aurora + ElastiCache )
+## AWS Fundermentals ( RDS + Aurora + ElastiCache )
 
 ### Amazon RDS overview
 
@@ -442,6 +519,8 @@
   - Provided features
     - Automated provitioning, OS patching
     - Continues backups and restore to specific timestamp
+      - Database backed up once every day
+      - Transactional logs every 5min
     - Monitoring dashboards
     - Read replicas for improved read performance
     - Muti AZ for DR ( Disaster recovery )
@@ -452,6 +531,13 @@
       - Free space less than 10%
       - Low storage last at least 5min
       - 6 hours passed since last modification
+    - Transparent Data Encryption
+      - Support Oracle and SQL Server
+    - Support Auto scaling
+  - Maintanance(Multi AZ)
+    - Database engine level upgrade:  Both primary and standby instances causing downtime.
+    - OS : Applied to secondary(stand by) first, then instance fails over then to primary
+    - Hardware: Only secondary is affected no downtime
 
 ### RDS Read replicas vs Multi AZ
 
@@ -464,7 +550,8 @@
   - Multi AZ
     - SYNC replication
     - One DNS automatic failover
-    - Not used for scaling 
+    - Not used for scaling
+    - Can't do cross region
 
   - **Can set up read replicas as multi AZ for DR**
   - Single AZ to multi AZ zero down time operation
@@ -488,6 +575,7 @@
   - Self healing
   - One master ( take writes ) + Upto 15 Read replicas
   - Writer endpoint and Reader endpoint
+  - Create clones using the database cloning feature(Faster than manual snapshot)
 
 ### Aurora advance concepts
 
@@ -553,11 +641,20 @@
     - Multi AZ with auto failover
     - Read replicas to high availability
     - Bakup and restore features
+    - Redis has purpose-built commands for working with real-time geospatial data at scale.
+    - Advanced data structures
+    - Snapshot
+    - Replication
+    - Transactions
+    - Pub/Sub
+    - Lua scripting
+    - Geo spacial queries
   - Memcache
     - Multi Node
     - No high availability
     - Non persistent
     - No backup and restore
+    - Multithreaded
 
 ### Elasticache Security
 
@@ -601,6 +698,10 @@
   - Hosted Zones (A container for records that define how to route traffic to a domain and subdomains)
     - Public Hosted Zones: How to route traffic on the internet ( eg myApp.mypublicdomain.com)
     - Private Hosted Zones: How to route traffic within one or more VPCs ( eg app1.company.internal)
+      - Need DNS hostname and DNS resoulutions
+      - VPC settings to associate with private hosted zone
+        - enableDnsHostnames
+        - enableDnsSupport
 
 ### TTL(Time to live)
 
@@ -700,6 +801,10 @@
   - Update NS records on 3rd party website to use Route 53 NS.
   - Copy name servers from 3rd party dns registrar
 
+### Route between on permises
+- To resolve any DNS queries for resources in the AWS VPC from the on-premises network, you can create an inbound endpoint on Route 53 Resolver and then DNS resolvers on the on-premises network can forward DNS queries to Route 53 Resolver via this endpoint.
+- To resolve DNS queries for any resources in the on-premises network from the AWS VPC, you can create an outbound endpoint on Route 53 Resolver and then Route 53 Resolver can conditionally forward queries to resolvers on the on-premises network via this endpoint.
+
 ## S3
 
 ### Overview
@@ -712,6 +817,8 @@
     - Host application, media
     - Data lakes, big data analytics
     - Static websites
+      - http://bucket-name.s3-website.Region.amazonaws.com
+      - http://bucket-name.s3-website-Region.amazonaws.com
   - Buckets
     - Store objects(files) in **buckets**(directories)
     - Buckets must have a globally unique name
@@ -729,6 +836,8 @@
     - Values are content of body
       - Max 5TB
       - More than 5GB must use multi part upload
+    - By default objects are owned by the aws account that uploaded it
+    - Meta data is not encrypted in an encrypted object
 
 ### S3 - Security
 
@@ -806,6 +915,16 @@
     - Min storage duration 180days
   - Intelligent Tiering
     - Move between tiers based on usage
+  - Glacier console
+    - Vault managment
+    - Archive management
+    - Job management
+    - Lifecycle policies
+    - Inventory retrival
+    - Billing and monitoring
+  - S3 console
+    - Restore objects from Glacier
+    - All other S3 managements
 
 ## Advanced S3
 
@@ -813,7 +932,7 @@
 
   - Transition actions
     - Configure objects to transition into another storage class
-    - eg: Move to Standard IA after **minimum 30** days from creating
+    - Before you transition objects to S3 Standard-IA or S3 One Zone-IA, you must store them for at least **30 days** in Amazon S3
 
   - Expiration actions
     - Configure objects to expire(delete) after some time
@@ -831,7 +950,7 @@
 ### S3 Event notifications
 
   - Events: Object created, Object removed etc
-  - React to events and notify then to SNS, SQS and lambda functions
+  - React to events and notify then to SNS, SQS(only standard not FIFO) and lambda functions
   - Has integration with Amazon event bridge
 
 ### S3 Performance
@@ -840,8 +959,11 @@
   - At least 3500 PUT/COPY/POST/DELETE or 5500 GET/HEAD requests per second per prefix
   - Improve performance
     - Multi part upload
-    - S3 Transfer Acceleration - Increase transfer speed(upload/download) by using edge locations
-    - S3 byte range fetches - Parallelize GETs by reqeusting specific byte ranges
+    - S3 Transfer Accelerator 
+      - Increase transfer speed(upload/download) by using edge locations
+      - Only accelerated data amount is charged
+    - S3 byte range fetches 
+      - Parallelize GETs by reqeusting specific byte ranges
 
 ### S3 Select & Glacier Select
 
@@ -924,6 +1046,9 @@
   - Legal hold
     - Protect object indefinitly
     - Can remove with the *s3:PutObjectLegalHold* permission
+  - Glacier Retention Policy
+    - Prevent objects from deletion until a certain time
+    - Cannot control modification or overritten of object
 
 ### S3 Access Points
 
@@ -952,6 +1077,9 @@
       - Enhance security with OAC(Origin Access Control)
         - Principle element should have service as "cloudfront.amazonaws.com" and the condition element should match the CloudFront distribution which contains S3 origin
       - Can used as an ingress(upload to S3)
+      - OAI(Origin Access Identity)
+        - Legacy method
+        - Doesn't support KMS
     - Custom endpoint
       - ALB
       - EC2
@@ -959,6 +1087,9 @@
       - Any http backend
   - Signed cookies
     - Allow to control who can access your content when user don't want to change their urls or when want to provide access to multiple restricted files
+  - Use field level encryption to protect sensitive data
+  - Can route to multiple origin based on content type
+  - Use origin group for high availability and failover
 
 ### CloudFront - ALB as an origin
 
@@ -1043,6 +1174,7 @@
 ### Amazon FSX
 
   - Launch 3rd party high performances on AWS
+  - POSIX file system
   - FSx for Lustre
     - Parellel distributed file system for large scale computing
     - Machine lerning, High Performance Computing
@@ -1068,6 +1200,8 @@
   - Types
     - S3 Gateway
       - Most recently used files are cached at gateway
+      - Cached volumes - Frequently cached data to reduce cost and access latency
+      - Stored vaolumes - Low latency access to whole dataset
     - FSx Gateway
       - Access to FSx for Windows file server
       - Local cache for frequently accessed data
@@ -1088,6 +1222,7 @@
 
   - Move large amount of data in/out AWS
   - Can sync to S3/FSx/EFS
+  - Can schedule trnasfer tasks
 
 ## Decouping applications: SQS,SNS,Kinesis,ActiveMQ
 
@@ -1121,10 +1256,18 @@
   - Default message visibility timeout is **30 Sec**
   - If processing takes more time use **ChangeMessageVisibility** api to get more time
 
+### Delay queues
+  - New messages send to queue remain invisible for consumers during delayed time period
+
 ### Long polling
 
   - When a consumer request message from queue and if there are no messages consumer can wait for a given time. 
   - Decrease number of API calls to SQS while increasing efficiency of the applicatoin.
+  - Can reduce cost of SQS becase it can reduce number of empty receives
+
+### Temporary queue
+
+Amazon SQS temporary queues - Temporary queues help you save development time and deployment costs when using common message patterns such as request-response. You can use the Temporary Queue Client to create high-throughput, cost-effective, application-managed temporary queues.
 
 ### SQS -FIFO Queue
 
@@ -1186,6 +1329,7 @@
   - Recommended use cases
     - Ability for multiple appliction to consume the same stream concurrenlty
     - Ability to consume the records in same order a few hours after
+  - Enhanced fanout pattern - To get own pipe per hard for consumer(not shared throughput)
 
 ### Kinesis Data Firehose
 
@@ -1274,10 +1418,23 @@
       - Use EC2 but need to manage manually
     - Fargate
       - No management needed
+    - EKS Anywhere
+      - Allow create and operate kubernates clusters on 
+      - Use VMware vSphere
 
 ### AWS App  Runner
   - Fully managed service for web applications and APIs
   - Use cases: web apps, APIs, Micro services, RAD
+
+## CloudFormation
+  - Infrastructure as a code 
+  - Custom Resources
+    - Custom provisioning logic that runs anytime create, update, delete stacks
+    - Allow run lambda functions, SNS
+  - Mappings: API for region
+  - Output: Output values so it can be imported to another stack and create cross-stack references
+  - Parameter: Custom values for template
+  - StackSets: Deploy same template across aws accounts and regions
 
 ## Serverless
 
@@ -1454,12 +1611,14 @@
   - Aurora DB cluster
     - Primary DB Intance: Read/Write, One instance
     - Aurora Replica: Only Reads
+  - Aurora tier in failover - largets of highest priority tier( lowest number)
 
 ### ElastiCache
   - Manged Redis/Memcached
   - Must provision EC2 Instance type
   - Redis suport clustering and MultiAZ, Read replicas
   - Code changes needed
+  - Can improve latency and throughtput for read heavy application workloads
 
 ### DynamoDB
   - Proprietary, managed serverless, NoSQL
@@ -1503,6 +1662,7 @@
     - Use larger files
   - Federated Query
     - Run queries in other services or on permises data sources
+  - Athena can automatically decrypt SSE-KMS encrypted buckets
 
 ### Redshift
   - Database and analytics engine
@@ -1515,6 +1675,10 @@
     - Query data in S3 without loading it
   - AQUA(Advanced Query Accelerator)
     - Cache that enhances Redshift
+  - Redshift datashare
+    - Grand readonly access to data
+    - Other accounts/cluster with in same account
+    - Use PrivateLink
 
 ### OpenSearch
   - Successor of ElasticSearch
@@ -1674,6 +1838,15 @@
   - Not near real time or real time
   - Subscriptions(Send logs to some where)
   - Log aggregation, multi account and multi region
+  - Access logs
+    - IP Address
+    - Request time
+    - Request URL
+    - Reponse status
+  - Execution Logs
+    - Request/Response Payload
+    - Request URL
+    - Response received from internal service
 
 ### CloudWatch Agent & CloudWatch Logs Agent
   - Logs agent
@@ -1681,6 +1854,8 @@
     - Can only send to CloudWAtch Logs
   - CloudWAtch Unified Agent
     - Collect additional system level metrics
+    - Collect custom metrics from the applications using statD and collectd protocols
+      - `aggregation_dimentions` in configuration file to aggregate all instances
     - Can configure using SSM Parameter Store
     - Metrics
       - CPU
@@ -1701,6 +1876,10 @@
     - Trigger auto scaling action
     - Send notification to SNS
   - Composite alarms(combine multiple alarms)
+  - Can use to recover impaired EC2 instances
+    - Recovered instance is indentical to the original instance(instance id, private ip, elastic ips, instance metadata)
+    - If oritinal instance was in a placement group recovered will be also put into same group
+    - If had a IP4 address it will be retained
 
 ### EventBridge
   - Schedule Cron jobs
@@ -1742,6 +1921,7 @@
       - Detect unusual activities
       - Can integrate with EventBridge
   - Events are stored for 90 days
+  - Intergrity validation feature to gurentee the intergrity and authencity of logs
 
 ### AWS Config
   - Helps with auditing and recording compliance of resources
@@ -1767,7 +1947,7 @@
 ### IAM - Advanced Policies
   - IAM Conditions
     - aws:SourceIp : Restrict client IP from API calls are made
-    - aws:RequestedRegion: Restricting region
+    - aws:RequestedRegion: Restricting region of resource
     - ec2:ResourceTag: Restrict base on tags
     - ec2:MultiFactorAuthPresent: Force MFA
     - aws:PrincipleOrgID: Rescrict to organization
@@ -1783,18 +1963,29 @@
 
 ### IAM - Identity Center
   - SSO for all AWS accounts
+  - Support hybrid model ( application in AWS auth provider on permises)
+  - Built in integrations with cloud applications eg: Salesforce, Jenkins
+  - Support identity provider in AM, AWS AD. On permises AD, SAML 2.0 complient
 
 ### AWS Directory Services
   - Way to create Active directory in AWS
   - AWS Manged Microsoft AD
+    - Run directory aware workloads
+    - Configure a trust relationshiop with on permises MS AD
   - AD Connector
+    - Allow on permisses users to login to AWS services with AD 
+    - Cannot run directory aware workloads
   - Single AD
+  - Integrate AWS resources with existing directory services
 
 ### AWS Control Tower
   - Set up and govern a secure and compliant multi-account AWS environment
   - Guardrails
     - Preventive Guardrails - Using SCPs
     - Detective Guardrails - Using AWS Config
+
+### AWS Resource Manager(RAM)
+  - Share resources between acconts or with in own account
 
 ## Security & Encryption(KMS, SSM Parameter Store, CloudHSM, Shield, WAF)
 
@@ -1807,7 +1998,7 @@
   - Types of KMS keys
     - AWS Owned keys(free)
     - AWS Managed Key (free)
-    - Customer managed key (priced)
+    - Customer managed key (priced): Deleting a CMS key has a waiting period
   - Automatic key rotation
   - KMS key policies
     - Default KMS Key policy
@@ -1827,10 +2018,10 @@
   - Can use multi-region keys but they are treated as independent keys by S3
 
 ### Sharing encrypted AMI via KMS
-   -  Source accoune encreypt with KMS key
-   -  Add **Launch Permission** to target account
-   -  Share KMS keys
-   -  Create IAM role at target account with enough permissions
+  - Source accoune encreypt with KMS key
+  - Add **Launch Permission** to target account
+  - Share KMS keys
+  - Create IAM role at target account with enough permissions
 
 ### SSM Parameter Store
   - Secure store for configuration and secrets
@@ -1869,7 +2060,7 @@
     - AppSync GraphQL API
     - Cognito User Pool
   - Define Web ACL(Access Control List) Rules
-    - IP Set
+    - IP Set: IPs want to allow through
     - SQL injection, Cross-Site Scripting
     - Geo-match(block countries)
     - Rate based : DDos protection
@@ -1887,6 +2078,10 @@
 
 ### Firewall Manager
   - Manage rules in all accounts of an AWS organisation
+  - Resources rules can be configured on
+    - VPC security groups
+    - Shield Advanced
+    - WAF
 
 ### GuardDuty
   - Intelligent threat discovery
@@ -1912,6 +2107,13 @@
   - Fully manage data security and data privacy service
   - Machine learning & pattern matching to discover and protect sensitive data
   - Sensitive data(Personal identifiable Information)
+
+### Security Manager
+  - Helps in automating operational tasks across your AWS resources
+  - Integrates with EC2, S3, and CloudWatch, and allows you to perform actions on resources using commands or scripts, either interactively or through automation.
+
+### Secuirty Hub
+  - provides a comprehensive view of high-priority security alerts and compliance status across AWS accounts
 
 ## Networking (VPC)
 
@@ -1977,6 +2179,10 @@
   - Need multiple AZ NAT for fault tolerance
   - Doesn't support port forwarding
   - Can't share between VPCs
+  - Public NAT
+    - When communicate via internet
+  - Private NAT
+    - When communicate via VPC
 
 ### Security groups & NACLs
   - Stateless(Security group is stateful)
@@ -2096,6 +2302,7 @@
 
 ### AWS Outposts Family
   - Fully managed solutions deliering AWS infrastructure and services to virtually any on-permisses or edge locatin for a hybrid experience
+  - Doesn't support EKS
 
 ## Disaster Recovery & Migrations
 
@@ -2146,6 +2353,7 @@
         - Identifies virtual machines and hosts associated with vCenter
       - Agent-based discovery
         - Deploy agent on each VM
+        - Suit for other than VMware
   - AWS Database Migration Service(DMS)
   - AWS Server Migration Service(SMS)
     - Use if MGN is not available
@@ -2163,6 +2371,7 @@
   - Agentless Discovery
   - Agent-based Discovery(more info)
   - Result can view at AWS migration Hub
+  - Support SAP, Oracle, SQL Server
 
 ### Recycle Bin
   - Restore accidentally deleted EBS snapshot and EBS-backed AMIs
@@ -2182,3 +2391,6 @@
   - Recommends optimal AWS Compute resources for your workloads to reduce costs
   - Helps you choose the optimal Amazon EC2 instance types
   - It does not recommend instance purchase options
+
+### AWS Cost explorer
+  - Help identify under utilized EC2
