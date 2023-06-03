@@ -34,17 +34,17 @@
  
 ### Users
 
- - Create users and assigne them to groups
- - Root user shouldn't be used or shared
- - Users can be grouped
- - Groups only contain users, not other groups
- - Users don't have to belong to a group and user can belong to multiple groups.
- - Thinks only root users are allowed to do
-  - Change account name or root password or root email address
-  - Change AWS support plan
-  - Close AWS account, enable MFA on S3 bucket delete
-  - Create Cloudfront key pair
-  - Register for GovCloud.
+  - Create users and assigne them to groups
+  - Root user shouldn't be used or shared
+  - Users can be grouped
+  - Groups only contain users, not other groups
+  - Users don't have to belong to a group and user can belong to multiple groups.
+  - Things only root users are allowed to do
+    - Change account name or root password or root email address
+    - Change AWS support plan
+    - Close AWS account, enable MFA on S3 bucket delete
+    - Create Cloudfront key pair
+    - Register for GovCloud.
  
 ### Permissions
 
@@ -71,7 +71,7 @@
 
 ### Service Control Policies
 
- SCPs are a type of policy that can be used to manage permissions and access to AWS services and resources across an entire organization, or a subset of an organization, such as an AWS account or an organizational unit (OU).
+  - SCPs are a type of policy that can be used to manage permissions and access to AWS services and resources across an entire organization, or a subset of an organization, such as an AWS account or an organizational unit (OU).
   
 ## IAM MFA
 
@@ -167,9 +167,9 @@
 
 ### Tenancy
   - Default - Runs on shared hardware
-  - Dedinated - Runs on single tenant hardware
+  - Dedicated - Runs on single tenant hardware
   - Host - Runs on a dedicated host
-  - Tenancy can only change from deciate to host and from host to dedicated
+  - Tenancy can only change from dedicate to host and from host to dedicated
 
 ### Security groups
 
@@ -245,9 +245,10 @@
   - By default when instance terminate only root EBS get deleted
   - If volume is encrypted data moving between the volume and the instance is also encrypted
   - Can increase volume while in use
+  - Can change volume type while in use
   - RAID Configuration
     - RAID 0 - When I/O is important
-    - RAID 1 - When falut tolerance is important
+    - RAID 1 - When fault tolerance is important
    
 ### EBS Snapshots
  
@@ -258,11 +259,19 @@
   - Fast snapshot restore: Cost $$$
   - Use Data Lifecycle Manager(DLM) to automate creation, retention and delettion of EBS
 
-### Volume Types
+ 
+### EBS Volume Types
+
   - General Purpose SSD ( max 16000 IOPS)
-  - Provitioned IOPS SSD ( max 64000 IOPS ) - This volume type support multi attach
+    - gp2/gp3
+  - Provitioned IOPS SSD ( max 64000 IOPS )
+    - oi1/io2 
+    - High performance
+    - This volume type support multi attach
   - Cold HDD ( max 250 IOPS )
+    - sc1 : Lowest cost HDD for infrequently access data
   - Throughput Optimized HDD ( 500 IOPS )
+    - st1 : Low cost HDD for throughput intensive work
   
 ### AMI ( Amazon Machine Image )
 
@@ -285,19 +294,16 @@
   - Can't detach and attach to a different instance
   - Data persists only for the life time of instance
  
-### EBS Volume Types
-
- - GP2/GP3 : General purpose SSD
- - io1/io2 : High performance SSD
- - st1 : Low cost HDD for throughput intensive work
- - sc1 : Lowest cost HDD for infrequently access data
- 
 ### EBS Multi attach
 
  - Attach same EBS intance to multiple EC2 instances in same AZ
  - Only io2 family
  - Higher application availablity
  - Upto 16 EC2 instances at a time
+
+### Non bootable volumes
+
+  - Throughput Optimized HDD (st1) and Cold HDD (sc1) volume types CANNOT be used as a boot volume
  
 ### Amazon EFS ( Elastic File System )
 
@@ -307,10 +313,6 @@
   - Compatible with linux based AMI
   - Scalable, pay as use
   - POSIX file system
-  - Storage classes
-    - Scale mode
-    - Performance mode
-    - Throughput mode
   - EFS replication
     - Replicate EFS within region or between regions
   - Storage class
@@ -327,10 +329,6 @@
     - Elastic
     - Provisioned
     - Bursting
-
-### Non bootable volumes
-
-  - Throughput Optimized HDD (st1) and Cold HDD (sc1) volume types CANNOT be used as a boot volume
 
 ## High Availability and Scalability
 
@@ -462,7 +460,7 @@
   - Termination policies
     - `default` Useful when Spot allocation strategy evaluated before any other policy. 
       - Priority provided for On-Demand vs Spot 
-      - Oldest launch template unlexx instance use a launch configuration
+      - Oldest launch template unless instance use a launch configuration
     - `AllocationStrategy` Balance instace type within an ASG
     - `OldestLanuchTemplate` When launch template has changed
     - `OldestLaunchConfiguration` When Launch configuration has changed
@@ -817,8 +815,8 @@
     - Host application, media
     - Data lakes, big data analytics
     - Static websites
-      - http://bucket-name.s3-website.Region.amazonaws.com
-      - http://bucket-name.s3-website-Region.amazonaws.com
+      - `http://bucket-name.s3-website.Region.amazonaws.com`
+      - `http://bucket-name.s3-website-Region.amazonaws.com`
   - Buckets
     - Store objects(files) in **buckets**(directories)
     - Buckets must have a globally unique name
@@ -847,7 +845,7 @@
       - Bucket policies - cross account
       - Object Access Control List(ACL)
         - Grant permission when objects are owned by a different account
-      - Bucket Access COntrol List(ACL)
+      - Bucket Access Control List(ACL)
   - IAM principle can access and S3 object if
     - User IAM permission ALLOW it OR the resource policy ALLOWS it AND there is no explicit DENY
 
@@ -859,7 +857,7 @@
   - Json policy
     - Resource: Buckets and Objects
     - Effect: Allow or Deny
-    - Actions: Set of API to allow ro deny
+    - Actions: Set of API to allow or deny
     - Principle: The account or user to apply the policy to
 
   - Use cases
@@ -942,6 +940,8 @@
     - Help to decide when to transition objects into right storage class.
     - Recommended for Standard and Standard IA
     - Does not give recommendations for transitions to the ONEZONE_IA or S3 Glacier storage classes.
+
+  ![Life cycle transition](https://docs.aws.amazon.com/images/AmazonS3/latest/userguide/images/lifecycle-transitions-v3.png)
 
 ### S3 Requester Pays
 
